@@ -173,10 +173,16 @@ body[data-ds-dark-theme] [data-chat-flow] {
   width: 0 !important;
   height: 0 !important;
 }
+[data-composer-card] textarea,
 [data-composer-card] .uV2eYG_input,
 [data-composer-card] .uV2eYG_mirror,
-[data-composer-card] .uV2eYG_backdrop {
-  padding-right: 28px !important;
+[data-composer-card] .uV2eYG_backdrop,
+[data-composer-card] [data-input-backdrop],
+[data-composer-card] [data-input-backdrop] *,
+[data-composer-card] [data-input-mirror] {
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  font-variant-ligatures: none !important;
 }
 [data-composer-card] button {
   background: rgba(255, 255, 255, 0.12) !important;

@@ -75,6 +75,15 @@ const letterFile = 'C:\\Users\\<你>\\...\\logo-letter.svg';
 删除：cordis_undefine kimino-6
 ```
 
+## 更新日志
+
+| 版本 | 变更 |
+| --- | --- |
+| v59 | 修复输入框光标（竖线）与文字重叠：移除仅作用于输入镜像层的 `padding-right: 28px` 差异化规则，并统一 composer 内 textarea / mirror / backdrop 各文字层的 `font-weight` / `letter-spacing` / `font-variant-ligatures`，使光标与可见文字度量严格一致 |
+| v58 | 输入框毛玻璃卡片、placeholder 配色等细化 |
+| v57 | 输入框滚动条隐藏修复 |
+| v56 | 首个公开版本：彗星蓝主题、壁纸、电影标题 Logo、placeholder 文案 |
+
 ## 故障排查
 
 | 现象 | 处理 |

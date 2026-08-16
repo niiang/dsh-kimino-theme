@@ -1,0 +1,13 @@
+{
+  "name": "dsh-kimino-theme",
+  "version": "56.0.0",
+  "description": "Kimi no Na wa (Your Name) theme for DeepSeek Harness Web GUI — dynamic Cordis plugin source.",
+  "license": "MIT",
+  "files": [
+    "plugin",
+    "assets"
+  ],
+  "scripts": {
+    "install:theme": "echo 'See README.md — paste plugin/host.js and plugin/client.js into cordis_define'"
+  }
+}

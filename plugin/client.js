@@ -151,6 +151,19 @@ body[data-ds-dark-theme] [data-chat-flow] {
   text-shadow: none !important;
   -webkit-text-stroke: 0 !important;
 }
+[data-composer-card] .uV2eYG_scroll {
+  scrollbar-width: none !important;
+}
+[data-composer-card] .uV2eYG_scroll::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+[data-composer-card] .uV2eYG_input,
+[data-composer-card] .uV2eYG_mirror,
+[data-composer-card] .uV2eYG_backdrop {
+  padding-right: 28px !important;
+}
 [data-composer-card] button {
   background: rgba(255, 255, 255, 0.12) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;

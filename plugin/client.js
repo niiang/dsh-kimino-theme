@@ -1,190 +1,176 @@
-// Kimi no Na wa theme — browser half of the dsh-kimino-theme bundle.
-// Registered with the web module loader via the package's ./client export;
-// the cordis loader adopts `exports` (apply/inject) as the plugin object.
-// Delivers: comet-blue token layer, wallpaper + glassmorphism component
-// styles, logo swap, composer re-skin, placeholder copy, unified
-// scrollbars, and the message-scroll patch-ups. Every side effect is
-// registered through ctx.effect so disable/remove fully reverts the page.
-window.__ModuleLoader__.load({
-  id: 'dsh-kimino-theme',
-  factory: (require) => {
-    var module = { exports: {} };
-    var exports = module.exports;
-    Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-
-    const inject = ['theme'];
-
-    const apply = (ctx) => {
-      const patchPlaceholders = () => {
-        const replacements = {
-          '给智能体发消息': '黄昏之时，我在这里等你。',
-          'Message the agent': '黄昏之时，我在这里等你。',
-          '描述你想要构建的内容': '君の名は。想构建怎样的世界？',
-          'Describe what you want to build': '君の名は。想构建怎样的世界？',
-        };
-        const walk = () => {
-          document.querySelectorAll('textarea').forEach((ta) => {
-            const current = ta.placeholder;
-            if (current && replacements[current] !== undefined && ta.placeholder !== replacements[current]) {
-              ta.placeholder = replacements[current];
-            }
-          });
-        };
-        walk();
-        const observer = new MutationObserver(walk);
-        observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['placeholder'] });
-        return () => observer.disconnect();
+return {
+  apply(ctx) {
+    const theme = ctx.get('theme');
+    if (theme === undefined) return;
+    const patchPlaceholders = () => {
+      const replacements = {
+        '给智能体发消息': '黄昏之时，我在这里等你。',
+        'Message the agent': '黄昏之时，我在这里等你。',
+        '描述你想要构建的内容': '君の名は。想构建怎样的世界？',
+        'Describe what you want to build': '君の名は。想构建怎样的世界？',
       };
-      const disposePlaceholders = patchPlaceholders();
-      const pair = (v) => ({ light: v, dark: v });
-      const dispose = ctx.theme.overrideTokens('kimino-bg', {
-        '--dsw-alias-bg-base': pair('rgba(5,8,20,0)'),
-        '--dsw-alias-bg-layer-1': pair('rgba(15,23,42,0.75)'),
-        '--dsw-alias-bg-layer-2': pair('rgba(15,23,42,0.8)'),
-        '--dsw-alias-bg-layer-3': pair('rgba(15,23,42,0.85)'),
-        '--dsw-alias-bg-overlay': pair('rgba(10,14,26,0.9)'),
-        '--dsw-alias-bg-module-platform': pair('rgba(255,255,255,0.08)'),
-        '--dsw-alias-bg-multi-select': pair('rgba(147,197,253,0.15)'),
-        '--dsw-alias-border-l1': pair('rgba(147,197,253,0.14)'),
-        '--dsw-alias-border-l2': pair('rgba(147,197,253,0.22)'),
-        '--dsw-alias-border-l3': pair('rgba(147,197,253,0.28)'),
-        '--dsw-alias-border-l2-darkmode-thin': pair('rgba(147,197,253,0.16)'),
-        '--dsw-alias-brand-primary': pair('#93C5FD'),
-        '--dsw-alias-button-elevated-fill': pair('rgba(255,255,255,0.08)'),
-        '--dsw-alias-button-floating-fill': pair('rgba(255,255,255,0.1)'),
-        '--dsw-alias-button-floating-hover': pair('rgba(255,255,255,0.15)'),
-        '--dsw-alias-button-primary-dimmed': pair('rgba(147,197,253,0.18)'),
-        '--dsw-alias-button-ghost-active-fill': pair('rgba(147,197,253,0.16)'),
-        '--dsw-alias-button-ghost-active-hover': pair('rgba(147,197,253,0.22)'),
-        '--dsw-alias-button-ghost-active-border': pair('rgba(147,197,253,0.5)'),
-        '--dsw-alias-button-tool-bar-fill': pair('rgba(255,255,255,0.1)'),
-        '--dsw-alias-button-tool-bar-hover': pair('rgba(255,255,255,0.15)'),
-        '--dsw-alias-button-tool-bar-fill-invisible': pair('rgba(255,255,255,0.1)'),
-        '--dsw-alias-button-info-fill': pair('#93C5FD'),
-        '--dsw-alias-button-info-hover': pair('#7CAEFD'),
-        '--dsw-alias-interactive-bg-hover': pair('rgba(255,255,255,0.08)'),
-        '--dsw-alias-interactive-bg-hover-solid': pair('rgba(255,255,255,0.1)'),
-        '--dsw-alias-interactive-bg-active': pair('rgba(147,197,253,0.16)'),
-        '--dsw-alias-interactive-bg-hover-accent': pair('rgba(147,197,253,0.2)'),
-        '--dsw-alias-interactive-bg-hover-danger': pair('rgba(248,113,113,0.12)'),
-        '--dsw-alias-label-primary': pair('#F8FAFC'),
-        '--dsw-alias-label-secondary': pair('#CBD5E1'),
-        '--dsw-alias-label-tertiary': pair('#93C5FD'),
-        '--dsw-alias-label-caption': pair('#94A3B8'),
-        '--dsw-alias-label-primary-dimmed': pair('#A5B4FC'),
-        '--dsw-alias-markdown-inline-code': pair('rgba(147,197,253,0.12)'),
-        '--dsw-alias-markdown-code-block': pair('rgba(13,17,23,0.55)'),
-        '--dsw-alias-markdown-code-block-banner': pair('rgba(147,197,253,0.08)'),
-        '--dsw-alias-markdown-tag': pair('rgba(147,197,253,0.1)'),
-        '--dsw-alias-markdown-citation': pair('rgba(147,197,253,0.1)'),
-        '--dsw-alias-markdown-code-segment-unselected': pair('rgba(255,255,255,0.06)'),
-        '--dsw-alias-markdown-code-segment-selected': pair('rgba(147,197,253,0.2)'),
-        '--dsw-alias-markdown-placeholder': pair('rgba(255,255,255,0.05)'),
-        '--dsw-alias-state-error-primary': pair('#F87171'),
-        '--dsw-alias-state-error-secondary': pair('#FCA5A5'),
-        '--dsw-alias-state-error-tertiary': pair('rgba(248,113,113,0.14)'),
-        '--dsw-alias-state-success-primary': pair('#7FE0C8'),
-        '--dsw-alias-state-success-tertiary': pair('rgba(127,224,200,0.14)'),
-        '--dsw-alias-state-warn-primary': pair('#FBBF24'),
-        '--dsw-alias-state-warn-secondary': pair('#FCD34D'),
-        '--dsw-alias-state-warn-tertiary': pair('rgba(251,191,36,0.14)'),
-        '--dsw-alias-state-business-primary': pair('#93C5FD'),
-        '--dsw-alias-state-business-tertiary': pair('rgba(147,197,253,0.14)'),
-        '--dsw-specific-sidebar-fill': pair('rgba(15,23,42,0.42)'),
-        '--dsw-specific-sidebar-nav-item-hover': pair('rgba(255,255,255,0.08)'),
-        '--dsw-specific-sidebar-nav-item-active': pair('rgba(147,197,253,0.16)'),
-        '--dsw-specific-sidebar-nav-item-active-accent': pair('rgba(147,197,253,0.85)'),
-        '--dsw-specific-input-major': pair('rgba(15,23,42,0.85)'),
-        '--dsw-specific-bubble': pair('rgba(15,23,42,0.75)'),
-        '--dsw-specific-tip': pair('rgba(13,17,23,0.75)'),
-        '--dsw-specific-menu': pair('rgba(37,58,125,0.94)'),
-        '--dsw-specific-selector': pair('rgba(255,255,255,0.1)'),
-        '--dsw-alias-scrollbar-bg-l2': pair('rgba(147,197,253,0.32)'),
-        '--dsw-alias-scrollbar-hover-l2': pair('rgba(147,197,253,0.55)'),
-        '--dsw-shadow-lv2': pair('0 8px 24px rgba(0,0,0,0.28)'),
-      });
-      ctx.effect(() => dispose);
-      ctx.effect(() => disposePlaceholders);
-      document.documentElement.setAttribute('data-kimino-theme', 'on');
-      ctx.effect(() => () => document.documentElement.removeAttribute('data-kimino-theme'));
-      // Wheel isolation: while the composer textarea has focus, only the input
-      // card's own scroll container may consume the wheel. Defaults (InputBar
-      // onWheel) forward the delta to the conversation scrollport when the
-      // inner scroller is at top/bottom or cannot scroll, which makes the page
-      // backdrop scroll through the composer. Capture first and swallow the
-      // event whenever there is no inner scroll to perform.
-      const composerWheel = (event) => {
-        // Hover semantics: decide by where the mouse pointer is (event.target),
-        // not by keyboard focus, so moving the pointer back onto the chat area
-        // restores backdrop scrolling even while the composer keeps focus.
-        const target = event.target;
-        if (!(target instanceof Element)) return;
-        const card = target.closest('[data-composer-card]');
-        const scroller = target.closest('[data-input-scroll]');
-        if (!card || !(scroller instanceof HTMLElement)) return;
-        const canScroll = scroller.scrollHeight > scroller.clientHeight + 1;
-        if (canScroll) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      };
-      document.addEventListener('wheel', composerWheel, { capture: true, passive: false });
-      ctx.effect(() => () => document.removeEventListener('wheel', composerWheel, { capture: true }));
-      // ── 消息滚动重构配套（样式表内有完整注释）──────────────────────
-      // 1) 给纯消息滚动容器 .Md3f7G_scroll 补 data-conversation-scroll 标记：
-      //    组件 scrollerOf() 用 closest 查找该属性，从消息侧会先命中自身，
-      //    自动跟随 / 滚动位置恢复 / 回到底部 / 加载更早消息全部锚定内层
-      //    滚动器。React 重建节点时由 MutationObserver 补打标记。
-      const markChatScrollers = () => {
-        document.querySelectorAll('.Md3f7G_scroll:not([data-conversation-scroll])').forEach((el) => {
-          el.setAttribute('data-conversation-scroll', '');
+      const walk = () => {
+        document.querySelectorAll('textarea').forEach((ta) => {
+          const current = ta.placeholder;
+          if (current && replacements[current] !== undefined && ta.placeholder !== replacements[current]) {
+            ta.placeholder = replacements[current];
+          }
         });
       };
-      markChatScrollers();
-      const chatScrollerObserver = new MutationObserver(markChatScrollers);
-      chatScrollerObserver.observe(document.body, { subtree: true, childList: true });
-      ctx.effect(() => () => {
-        chatScrollerObserver.disconnect();
-        document.querySelectorAll('.Md3f7G_scroll[data-conversation-scroll]').forEach((el) => {
-          el.removeAttribute('data-conversation-scroll');
-        });
+      walk();
+      const observer = new MutationObserver(walk);
+      observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['placeholder'] });
+      return () => observer.disconnect();
+    };
+    const disposePlaceholders = patchPlaceholders();
+    const pair = (v) => ({ light: v, dark: v });
+    const dispose = theme.overrideTokens('kimino-bg', {
+      '--dsw-alias-bg-base': pair('rgba(5,8,20,0)'),
+      '--dsw-alias-bg-layer-1': pair('rgba(15,23,42,0.75)'),
+      '--dsw-alias-bg-layer-2': pair('rgba(15,23,42,0.8)'),
+      '--dsw-alias-bg-layer-3': pair('rgba(15,23,42,0.85)'),
+      '--dsw-alias-bg-overlay': pair('rgba(10,14,26,0.9)'),
+      '--dsw-alias-bg-module-platform': pair('rgba(255,255,255,0.08)'),
+      '--dsw-alias-bg-multi-select': pair('rgba(147,197,253,0.15)'),
+      '--dsw-alias-border-l1': pair('rgba(147,197,253,0.14)'),
+      '--dsw-alias-border-l2': pair('rgba(147,197,253,0.22)'),
+      '--dsw-alias-border-l3': pair('rgba(147,197,253,0.28)'),
+      '--dsw-alias-border-l2-darkmode-thin': pair('rgba(147,197,253,0.16)'),
+      '--dsw-alias-brand-primary': pair('#93C5FD'),
+      '--dsw-alias-button-elevated-fill': pair('rgba(255,255,255,0.08)'),
+      '--dsw-alias-button-floating-fill': pair('rgba(255,255,255,0.1)'),
+      '--dsw-alias-button-floating-hover': pair('rgba(255,255,255,0.15)'),
+      '--dsw-alias-button-primary-dimmed': pair('rgba(147,197,253,0.18)'),
+      '--dsw-alias-button-ghost-active-fill': pair('rgba(147,197,253,0.16)'),
+      '--dsw-alias-button-ghost-active-hover': pair('rgba(147,197,253,0.22)'),
+      '--dsw-alias-button-ghost-active-border': pair('rgba(147,197,253,0.5)'),
+      '--dsw-alias-button-tool-bar-fill': pair('rgba(255,255,255,0.1)'),
+      '--dsw-alias-button-tool-bar-hover': pair('rgba(255,255,255,0.15)'),
+      '--dsw-alias-button-tool-bar-fill-invisible': pair('rgba(255,255,255,0.1)'),
+      '--dsw-alias-button-info-fill': pair('#93C5FD'),
+      '--dsw-alias-button-info-hover': pair('#7CAEFD'),
+      '--dsw-alias-interactive-bg-hover': pair('rgba(255,255,255,0.08)'),
+      '--dsw-alias-interactive-bg-hover-solid': pair('rgba(255,255,255,0.1)'),
+      '--dsw-alias-interactive-bg-active': pair('rgba(147,197,253,0.16)'),
+      '--dsw-alias-interactive-bg-hover-accent': pair('rgba(147,197,253,0.2)'),
+      '--dsw-alias-interactive-bg-hover-danger': pair('rgba(248,113,113,0.12)'),
+      '--dsw-alias-label-primary': pair('#F8FAFC'),
+      '--dsw-alias-label-secondary': pair('#CBD5E1'),
+      '--dsw-alias-label-tertiary': pair('#93C5FD'),
+      '--dsw-alias-label-caption': pair('#94A3B8'),
+      '--dsw-alias-label-primary-dimmed': pair('#A5B4FC'),
+      '--dsw-alias-markdown-inline-code': pair('rgba(147,197,253,0.12)'),
+      '--dsw-alias-markdown-code-block': pair('rgba(13,17,23,0.55)'),
+      '--dsw-alias-markdown-code-block-banner': pair('rgba(147,197,253,0.08)'),
+      '--dsw-alias-markdown-tag': pair('rgba(147,197,253,0.1)'),
+      '--dsw-alias-markdown-citation': pair('rgba(147,197,253,0.1)'),
+      '--dsw-alias-markdown-code-segment-unselected': pair('rgba(255,255,255,0.06)'),
+      '--dsw-alias-markdown-code-segment-selected': pair('rgba(147,197,253,0.2)'),
+      '--dsw-alias-markdown-placeholder': pair('rgba(255,255,255,0.05)'),
+      '--dsw-alias-state-error-primary': pair('#F87171'),
+      '--dsw-alias-state-error-secondary': pair('#FCA5A5'),
+      '--dsw-alias-state-error-tertiary': pair('rgba(248,113,113,0.14)'),
+      '--dsw-alias-state-success-primary': pair('#7FE0C8'),
+      '--dsw-alias-state-success-tertiary': pair('rgba(127,224,200,0.14)'),
+      '--dsw-alias-state-warn-primary': pair('#FBBF24'),
+      '--dsw-alias-state-warn-secondary': pair('#FCD34D'),
+      '--dsw-alias-state-warn-tertiary': pair('rgba(251,191,36,0.14)'),
+      '--dsw-alias-state-business-primary': pair('#93C5FD'),
+      '--dsw-alias-state-business-tertiary': pair('rgba(147,197,253,0.14)'),
+      '--dsw-specific-sidebar-fill': pair('rgba(15,23,42,0.42)'),
+      '--dsw-specific-sidebar-nav-item-hover': pair('rgba(255,255,255,0.08)'),
+      '--dsw-specific-sidebar-nav-item-active': pair('rgba(147,197,253,0.16)'),
+      '--dsw-specific-sidebar-nav-item-active-accent': pair('rgba(147,197,253,0.85)'),
+      '--dsw-specific-input-major': pair('rgba(15,23,42,0.85)'),
+      '--dsw-specific-bubble': pair('rgba(15,23,42,0.75)'),
+      '--dsw-specific-tip': pair('rgba(13,17,23,0.75)'),
+      '--dsw-specific-menu': pair('rgba(37,58,125,0.94)'),
+      '--dsw-specific-selector': pair('rgba(255,255,255,0.1)'),
+      '--dsw-alias-scrollbar-bg-l2': pair('rgba(147,197,253,0.32)'),
+      '--dsw-alias-scrollbar-hover-l2': pair('rgba(147,197,253,0.55)'),
+      '--dsw-shadow-lv2': pair('0 8px 24px rgba(0,0,0,0.28)'),
+    });
+    ctx.effect(() => dispose);
+    ctx.effect(() => disposePlaceholders);
+    document.documentElement.setAttribute('data-kimino-theme', 'on');
+    ctx.effect(() => () => document.documentElement.removeAttribute('data-kimino-theme'));
+    // Wheel isolation: while the composer textarea has focus, only the input
+    // card's own scroll container may consume the wheel. Defaults (InputBar
+    // onWheel) forward the delta to the conversation scrollport when the
+    // inner scroller is at top/bottom or cannot scroll, which makes the page
+    // backdrop scroll through the composer. Capture first and swallow the
+    // event whenever there is no inner scroll to perform.
+    const composerWheel = (event) => {
+      // Hover semantics: decide by where the mouse pointer is (event.target),
+      // not by keyboard focus, so moving the pointer back onto the chat area
+      // restores backdrop scrolling even while the composer keeps focus.
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const card = target.closest('[data-composer-card]');
+      const scroller = target.closest('[data-input-scroll]');
+      if (!card || !(scroller instanceof HTMLElement)) return;
+      const canScroll = scroller.scrollHeight > scroller.clientHeight + 1;
+      if (canScroll) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    document.addEventListener('wheel', composerWheel, { capture: true, passive: false });
+    ctx.effect(() => () => document.removeEventListener('wheel', composerWheel, { capture: true }));
+    // ── 消息滚动重构配套（样式表内有完整注释）──────────────────────
+    // 1) 给纯消息滚动容器 .Md3f7G_scroll 补 data-conversation-scroll 标记：
+    //    组件 scrollerOf() 用 closest 查找该属性，从消息侧会先命中自身，
+    //    自动跟随 / 滚动位置恢复 / 回到底部 / 加载更早消息全部锚定内层
+    //    滚动器。React 重建节点时由 MutationObserver 补打标记。
+    const markChatScrollers = () => {
+      document.querySelectorAll('.Md3f7G_scroll:not([data-conversation-scroll])').forEach((el) => {
+        el.setAttribute('data-conversation-scroll', '');
       });
-      // 2) 输入卡非文本区（附件行 / 按钮等）滚轮：原生时代由外层 scrollBody
-      //    承接，重构后补一条转发到内层消息滚动器，保持既有手感。文本区
-      //    （[data-input-scroll]）仍由上面的 composerWheel 守卫全权处理。
-      const cardChromeWheel = (event) => {
-        if (event.deltaY === 0) return;
-        const target = event.target;
-        if (!(target instanceof Element)) return;
-        if (target.closest('[data-input-scroll]')) return;
-        const card = target.closest('[data-composer-card]');
-        if (!card) return;
-        const root = card.closest('.wSkVaW_root');
-        const real = root === null ? null : root.querySelector('.Md3f7G_scroll');
-        if (!(real instanceof HTMLElement)) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        real.scrollTop += event.deltaY;
-      };
-      document.addEventListener('wheel', cardChromeWheel, { capture: true, passive: false });
-      ctx.effect(() => () => document.removeEventListener('wheel', cardChromeWheel, { capture: true }));
-      // 3) 滚动事件接力：组件把 scroll 监听器锚定在挂载时解析到的容器上；
-      //    若会话先于插件激活挂载，监听器留在已退化为布局的外层 scrollBody，
-      //    内层滚动事件到不了它 → atBottom 恒真 → 「回到底部」按钮永不出现。
-      //    接力：捕获内层 .Md3f7G_scroll 的 scroll，在外层派发合成 scroll；
-      //    组件处理器运行时经 scrollerOf() 重新解析到内层，状态计算恢复正确。
-      //    （若监听器本就锚定内层，转发无人接收，无副作用、不成环。）
-      const relayChatScroll = (event) => {
-        const inner = event.target;
-        if (!(inner instanceof Element)) return;
-        if (!inner.classList.contains('Md3f7G_scroll')) return;
-        const outer = inner.closest('.wSkVaW_scrollBody');
-        if (outer instanceof HTMLElement) outer.dispatchEvent(new Event('scroll'));
-      };
-      document.addEventListener('scroll', relayChatScroll, true);
-      ctx.effect(() => () => document.removeEventListener('scroll', relayChatScroll, true));
-      const styleEl = document.createElement('style');
-      styleEl.id = 'kimino-theme';
-      styleEl.textContent = `html { background-color: transparent !important; }
+    };
+    markChatScrollers();
+    const chatScrollerObserver = new MutationObserver(markChatScrollers);
+    chatScrollerObserver.observe(document.body, { subtree: true, childList: true });
+    ctx.effect(() => () => {
+      chatScrollerObserver.disconnect();
+      document.querySelectorAll('.Md3f7G_scroll[data-conversation-scroll]').forEach((el) => {
+        el.removeAttribute('data-conversation-scroll');
+      });
+    });
+    // 2) 输入卡非文本区（附件行 / 按钮等）滚轮：原生时代由外层 scrollBody
+    //    承接，重构后补一条转发到内层消息滚动器，保持既有手感。文本区
+    //    （[data-input-scroll]）仍由上面的 composerWheel 守卫全权处理。
+    const cardChromeWheel = (event) => {
+      if (event.deltaY === 0) return;
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('[data-input-scroll]')) return;
+      const card = target.closest('[data-composer-card]');
+      if (!card) return;
+      const root = card.closest('.wSkVaW_root');
+      const real = root === null ? null : root.querySelector('.Md3f7G_scroll');
+      if (!(real instanceof HTMLElement)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      real.scrollTop += event.deltaY;
+    };
+    document.addEventListener('wheel', cardChromeWheel, { capture: true, passive: false });
+    ctx.effect(() => () => document.removeEventListener('wheel', cardChromeWheel, { capture: true }));
+    // 3) 滚动事件接力：组件把 scroll 监听器锚定在挂载时解析到的容器上；
+    //    若会话先于插件激活挂载，监听器留在已退化为布局的外层 scrollBody，
+    //    内层滚动事件到不了它 → atBottom 恒真 → 「回到底部」按钮永不出现。
+    //    接力：捕获内层 .Md3f7G_scroll 的 scroll，在外层派发合成 scroll；
+    //    组件处理器运行时经 scrollerOf() 重新解析到内层，状态计算恢复正确。
+    //    （若监听器本就锚定内层，转发无人接收，无副作用、不成环。）
+    const relayChatScroll = (event) => {
+      const inner = event.target;
+      if (!(inner instanceof Element)) return;
+      if (!inner.classList.contains('Md3f7G_scroll')) return;
+      const outer = inner.closest('.wSkVaW_scrollBody');
+      if (outer instanceof HTMLElement) outer.dispatchEvent(new Event('scroll'));
+    };
+    document.addEventListener('scroll', relayChatScroll, true);
+    ctx.effect(() => () => document.removeEventListener('scroll', relayChatScroll, true));
+    
+    styles.insert(`html { background-color: transparent !important; }
 body {
   background-image:
     linear-gradient(180deg, rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%),
@@ -272,7 +258,7 @@ body[data-ds-dark-theme] [data-chat-flow] {
 }
 
 /* 会话统计栏：居中胶囊式轻毛玻璃。文字蓝紫，fit-content 胶囊宽度由内容
- * 决定（完整显示），暗色半透明底 + blur 把文字从壁纸中托出（解决"糊着"）；
+ * 决定（完整显示），暗色半透明底 + blur 把文字从壁纸中托出（解决“糊着”）；
  * 视觉克制：无阴影、细边框、小内边距。
  * 注意：.FJxK0a_ 为构建哈希前缀，升级 dsh-client-ui-conversation 后需同步。 */
 [data-composer-seat] .FJxK0a_root {
@@ -515,13 +501,6 @@ div[role="menu"] > div {
 }
 *::-webkit-scrollbar-corner {
   background: transparent !important;
-}`;
-      document.head.append(styleEl);
-      ctx.effect(() => styleEl.remove());
-    };
-
-    exports.apply = apply;
-    exports.inject = inject;
-    return module.exports;
+}`);
   },
-});
+};

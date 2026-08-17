@@ -16,7 +16,7 @@
 
 <p align="center">
   <strong>A Kimi no Na wa (Your Name) theme for the DeepSeek Harness (DSH) Web GUI</strong><br>
-  <em>Comet-blue glassmorphism · cinematic wallpaper · logo swap · composer re-skin · unified scrollbars · one-command install</em>
+  <em>Comet-blue glassmorphism · cinematic wallpaper · logo swap · composer re-skin · unified scrollbars · one-paste agent install</em>
 </p>
 
 <div align="center">
@@ -29,7 +29,9 @@
 
 dsh-kimino-theme turns the DSH Web GUI into Makoto Shinkai's *Your Name.*: a cinematic wallpaper behind every surface, translucent frosted-glass panels, comet-blue (`#93C5FD`) as the single interaction color, the movie logo in place of the DSH brand, a navy-glass composer card, and the placeholder copy swapped for themed lines.
 
-It ships as a standard dsh plugin bundle: mounted through the official profile mechanism, zero DSH source modifications, installed with one `dsh plugin` command, effective after a restart, and fully reverted when disabled or removed.
+It ships as a dynamic Cordis plugin: paste one install instruction into a DSH session and the agent does the rest — no DSH source modifications, nothing installed into a profile; disable or remove fully reverts the page.
+
+> v65 returns to the v59-proven dynamic-plugin install (v64 briefly introduced `dsh plugin add` static-bundle installs, whose browser half failed to load on some environments); the theme content remains the full v64 set — message-scroll rework, stats pill, Cordis panel styling and all.
 
 | Dimension | Native dsh web | dsh-kimino-theme |
 | --- | --- | --- |
@@ -39,8 +41,8 @@ It ships as a standard dsh plugin bundle: mounted through the official profile m
 | Composer | Default styling | Navy glass card, themed placeholders |
 | Scrollbars | Default | Global blue-glass thin scrollbars |
 | Message list bottom | Hard edge | 40px gradient fade-out mask |
-| Install | — | `dsh plugin --profile web add github:niiang/dsh-kimino-theme` |
-| Revert | — | Disable/remove fully reverts the page |
+| Install | — | One instruction pasted to the agent |
+| Revert | — | `cordis_stop` / `cordis_undefine` fully reverts |
 
 ![Main view: glassmorphism conversation over the wallpaper](docs/screenshots/chat-main.png)
 
@@ -52,7 +54,7 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 
 ### Wallpaper and logos
 
-- The wallpaper is served by the host half at `/kimino-bg/current.jpg` (`assets/current.jpg`), with a subtle dark gradient overlay for text legibility;
+- The wallpaper is served by the host half at `/kimino-bg/current.jpg` (`assets/current.jpg` in your clone), with a subtle dark gradient overlay for text legibility;
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
 
@@ -75,63 +77,82 @@ Every scrollbar adopts the blue-glass style: 10px wide, rounded, translucent blu
 
 ## Quick start
 
-### Requirements
+### One-paste install (recommended)
 
-- DeepSeek Harness installed and `dsh web` working;
-- Installing from GitHub requires pnpm (used internally by `dsh plugin`).
+Copy the whole block below into a DSH session; the agent clones the repo, rewrites the paths, defines and activates the plugin:
 
-### Three steps
-
-```sh
-# 1. Install the theme package
-dsh plugin --profile web add github:niiang/dsh-kimino-theme
-
-# 2. Restart dsh web
-dsh web
-
-# 3. Open the GUI (hard-refresh once with Ctrl+F5 to bust old caches)
+```text
+Install the DSH theme plugin dsh-kimino-theme for me (dynamic-plugin route):
+1. Clone https://github.com/niiang/dsh-kimino-theme to
+   ~/.dsh/themes/dsh-kimino-theme (create the directory if missing;
+   if it already exists, git pull first).
+2. Read plugin/host.js and plugin/client.js from the clone.
+3. Rewrite the <CLONE_DIR> placeholders in the bgFile / logoFile /
+   letterFile constants at the top of host.js to the absolute path of
+   the clone directory (on Windows, escape backslashes as \\).
+   No placeholder may remain.
+4. Pass the two files as code.host / code.client to cordis_define: if a
+   plugin named "Kimi no Na wa Theme" already exists, append a new
+   Package to the same pluginId and cordis_run mode:"update"; otherwise
+   create a new plugin (idPrefix "kimino") and cordis_run mode:"run".
+5. Remind me to hard-refresh the browser with Ctrl+F5 afterwards.
 ```
 
-The wallpaper appearing and the sidebar logo changing confirm the install.
+Assets are read straight from the clone; re-run the same block after theme updates to sync.
+
+### Manual install
+
+```bash
+git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-theme
+```
+
+1. Open `plugin/host.js` and replace the `<CLONE_DIR>` placeholders in the top three constants with the absolute path of your clone:
+
+   ```js
+   // Linux / macOS
+   const bgFile = '/home/you/.dsh/themes/dsh-kimino-theme/assets/current.jpg';
+   const logoFile = '/home/you/.dsh/themes/dsh-kimino-theme/assets/logo/your-name-movie-logo-blue.svg';
+   const letterFile = '/home/you/.dsh/themes/dsh-kimino-theme/assets/logo/logo-letter.svg';
+
+   // Windows (mind the backslash escaping)
+   const bgFile = 'C:\\Users\\you\\.dsh\\themes\\dsh-kimino-theme\\assets\\current.jpg';
+   const logoFile = 'C:\\Users\\you\\.dsh\\themes\\dsh-kimino-theme\\assets\\logo\\your-name-movie-logo-blue.svg';
+   const letterFile = 'C:\\Users\\you\\.dsh\\themes\\dsh-kimino-theme\\assets\\logo\\logo-letter.svg';
+   ```
+
+2. In a DSH session, call `cordis_define` with `code.host` = the contents of `plugin/host.js` and `code.client` = the contents of `plugin/client.js` (new plugin, idPrefix `"kimino"`).
+3. Activate with `cordis_run` (`mode: "run"` the first time, `mode: "update"` afterwards).
+4. Hard-refresh the browser with **Ctrl + F5**.
+
+### Auto-restore on restart (optional)
+
+Dynamic plugins are process-scoped: the theme disappears when DSH restarts, and re-running the install brings it back. To skip the manual step, use the bundled auto-restore companion:
+
+1. Copy `companion/kimino-restore.mjs` into your profile directory (e.g. `~/.dsh/profiles/web/`);
+2. Rewrite `THEME_DIR = '<CLONE_DIR>'` at the top of the file to your clone's absolute path;
+3. Append a row to that profile's `cordis.patch.yml`:
+
+   ```yaml
+   - insert:
+       - id: kimino-restore
+         name: ./kimino-restore.mjs
+   ```
+
+4. Restart `dsh web`. From then on, every new session triggers the companion to rebuild the theme from the latest source in your clone — after `git pull`, no further action is needed.
 
 ### Update / disable / remove
 
-| Action | Command |
+| Action | How |
 | --- | --- |
-| Update | `dsh plugin --profile web update dsh-kimino-theme`, restart `dsh web` |
-| Disable / remove | `dsh plugin --profile web remove dsh-kimino-theme`, restart `dsh web` |
-| Back to native | Same as remove; the page fully reverts, nothing left behind |
-
-### Install from a local clone (development)
-
-```sh
-git clone https://github.com/niiang/dsh-kimino-theme.git
-dsh plugin --profile web add link:/absolute/path/to/dsh-kimino-theme
-dsh web
-```
-
-The package is plain JavaScript (no build step, no dependencies), so `link:` installs work instantly; edit files under `plugin/` and restart `dsh web` to see changes.
-
-<details>
-<summary><strong>Alternative: as a dynamic plugin (no package install, no restart)</strong></summary>
-
-<br>
-
-You can also activate the theme as a dynamic Cordis plugin (process-scoped, gone on DSH restart):
-
-1. Read `plugin/host.js` and `plugin/client.js`;
-2. In a DSH session, pass them as `code.host` / `code.client` to `cordis_define` (new plugin, idPrefix `kimino`);
-3. `cordis_run` to activate, then Ctrl+F5 the browser.
-
-Telling the agent "install me via the dynamic-plugin route in the dsh-kimino-theme README" performs these steps.
-
-</details>
+| Update | `git pull` in the clone, then re-run the one-paste install (or `cordis_define` again + `cordis_run mode:"update"`) |
+| Pause | `cordis_stop <pluginId>` |
+| Remove | `cordis_undefine <pluginId>`; if the companion is deployed, remove it too (patch row + file, restart DSH) |
 
 ## Customizing
 
 ### Wallpaper
 
-Replace `assets/current.jpg` in your clone (keep the filename) and hard-refresh (Ctrl+F5) — no restart or reinstall needed. Any high-resolution 16:9 image works; the bundled wallpaper is about 5MB and the route caches it for one hour.
+Replace `assets/current.jpg` in your clone (keep the filename) and hard-refresh (Ctrl+F5) — no redefinition needed. Any high-resolution 16:9 image works; the bundled wallpaper is about 5MB and the route caches it for one hour.
 
 ### Logos
 
@@ -139,35 +160,41 @@ Replace `assets/logo/your-name-movie-logo-blue.svg` (expanded, landscape recomme
 
 ### Colors
 
-All colors live in two places inside `plugin/client.js`: the `overrideTokens` call (design tokens) and the stylesheet string (component styles). Edit and restart `dsh web`. [docs/theme-tokens.md](docs/theme-tokens.md) has a grouped cheat sheet (Chinese).
+All colors live in two places inside `plugin/client.js`: the `overrideTokens` call (design tokens) and the stylesheet string inside `styles.insert` (component styles). After editing, `cordis_define` again + `cordis_run mode:"update"` and hard-refresh. [docs/theme-tokens.md](docs/theme-tokens.md) has a grouped cheat sheet (Chinese).
 
 ## Architecture
 
-One package, two halves, one plugin row:
+v65 returns to the v59 dynamic-plugin shape: the repository carries only two closure sources plus assets; DSH's dynamic Cordis runtime defines and activates them inside a session — no profile-install machinery, no DSH source changes.
 
 ```
-package.json            # dsh.bundle.patch declaration + dsh.client declaration (official bundle shape)
-├── cordis.patch.yml    # plugin row: id kimino-theme / name dsh-kimino-theme
-├── plugin/host.js      # host half (Node): registers 3 asset routes /kimino-bg/*
-├── plugin/client.js    # browser half: token overrides + component styles + DOM patch-ups
-└── assets/             # wallpaper and logos, resolved relative to the package
+plugin/host.js      # dynamic-plugin host half (Node): 3 asset routes /kimino-bg/* (paths rewritten at install)
+plugin/client.js    # dynamic-plugin browser half: token overrides + component styles + DOM patch-ups (styles.insert)
+assets/             # wallpaper and logos
+companion/          # optional: auto-restore companion (static profile plugin rebuilding the dynamic theme)
 ```
 
-`dsh plugin add` installs the package into the profile and mounts the row; the host half starts with the `dsh web` process, and the browser half is delivered by the client module system via `/plugins/dsh-kimino-theme/client.js`. Every side effect (token layer, style element, event listeners, DOM attributes, routes) is registered on the plugin fiber and fully reclaimed on disable.
+Every side effect (token layer, style tags, event listeners, DOM attributes, routes) is registered on the plugin fiber; `cordis_stop` / `cordis_undefine` fully reclaims them.
 
 ## FAQ
 
 <details>
-<summary><strong>Installed and restarted, but nothing changed?</strong></summary>
+<summary><strong>Wallpaper / logos 404?</strong></summary>
 
-A: Make sure the command included `--profile web` (installed into the right profile); hard-refresh once with Ctrl+F5; if it still fails, check the `dsh web` startup log for `[kimino-theme] host half active`.
+A: The `<CLONE_DIR>` placeholders at the top of `plugin/host.js` were not rewritten to absolute local paths, or the clone was moved/deleted. Fix the three constants, then `cordis_define` again + `cordis_run mode:"update"` and hard-refresh.
 
 </details>
 
 <details>
-<summary><strong>Wallpaper / logos 404?</strong></summary>
+<summary><strong>Activated successfully but the page did not change?</strong></summary>
 
-A: The host half reads `assets/` by package-relative paths, so this should not happen with a package install. If you used the dynamic-plugin alternative and activated only the client half (no host-half routes), wallpaper and logos will 404 — define both halves as described in the alternative section.
+A: Confirm `cordis_run` reported success (approve the request if one is pending); hard-refresh once with Ctrl+F5; if it still fails, ask the agent in the session to inspect the plugin's runtime status and diagnostics with `cordis_inspect_self`.
+
+</details>
+
+<details>
+<summary><strong>The theme vanished after a DSH restart?</strong></summary>
+
+A: Dynamic plugins are process-scoped; that is expected. Re-run the one-paste install to restore, or deploy the auto-restore companion to automate it.
 
 </details>
 
@@ -194,10 +221,10 @@ A: Token layers stack, but visuals will fight each other. Enable only one theme 
 
 ## Known limitations
 
+- Dynamic plugins are process-scoped and need re-activation after a DSH restart (automatable with the companion, see Auto-restore).
 - Selectors for the message-scroll rework, sidebar logo swap, and composer highlights depend on DSH frontend build-time hash class names; major DSH upgrades may require a theme update (see FAQ).
 - The theme enforces one dark-glass visual across light and dark modes; there is no separate light variant (see FAQ).
 - Wallpaper and logo routes cache for one hour; hard-refresh after replacing assets.
-- The dynamic-plugin alternative is process-scoped and must be re-activated after a DSH restart; the package install has no such limitation.
 
 ## License and asset copyright
 

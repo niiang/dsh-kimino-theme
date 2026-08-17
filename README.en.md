@@ -31,8 +31,6 @@ dsh-kimino-theme turns the DSH Web GUI into Makoto Shinkai's *Your Name.*: a cin
 
 It ships as a dynamic Cordis plugin: paste one install instruction into a DSH session and the agent does the rest — no DSH source modifications, nothing installed into a profile; disable or remove fully reverts the page.
 
-> v65 returns to the v59-proven dynamic-plugin install (v64 briefly introduced `dsh plugin add` static-bundle installs, whose browser half failed to load on some environments); the theme content remains the full v64 set — message-scroll rework, stats pill, Cordis panel styling and all.
-
 | Dimension | Native dsh web | dsh-kimino-theme |
 | --- | --- | --- |
 | Background | Solid / solid gradient | Cinematic wallpaper + global blur veil |
@@ -76,6 +74,8 @@ DSH's conversation scroll container holds both the message list and the sticky c
 Every scrollbar adopts the blue-glass style: 10px wide, rounded, translucent blue thumb (deepening on hover), with WebKit/Blink and Firefox standard properties both covered.
 
 ## Quick start
+
+> **Browser recommendation**: the theme leans heavily on backdrop-filter glass, custom scrollbars and CSS masks — **Microsoft Edge** or **Google Chrome** recommended; Firefox renders some of these effects inconsistently (scrollbars, gradient masks may degrade).
 
 ### One-paste install (recommended)
 
@@ -124,29 +124,13 @@ git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-th
 3. Activate with `cordis_run` (`mode: "run"` the first time, `mode: "update"` afterwards).
 4. Hard-refresh the browser with **Ctrl + F5**.
 
-### Auto-restore on restart (optional)
-
-Dynamic plugins are process-scoped: the theme disappears when DSH restarts, and re-running the install brings it back. To skip the manual step, use the bundled auto-restore companion:
-
-1. Copy `companion/kimino-restore.mjs` into your profile directory (e.g. `~/.dsh/profiles/web/`);
-2. Rewrite `THEME_DIR = '<CLONE_DIR>'` at the top of the file to your clone's absolute path;
-3. Append a row to that profile's `cordis.patch.yml`:
-
-   ```yaml
-   - insert:
-       - id: kimino-restore
-         name: ./kimino-restore.mjs
-   ```
-
-4. Restart `dsh web`. From then on, every new session triggers the companion to rebuild the theme from the latest source in your clone — after `git pull`, no further action is needed.
-
 ### Update / disable / remove
 
 | Action | How |
 | --- | --- |
 | Update | `git pull` in the clone, then re-run the one-paste install (or `cordis_define` again + `cordis_run mode:"update"`) |
 | Pause | `cordis_stop <pluginId>` |
-| Remove | `cordis_undefine <pluginId>`; if the companion is deployed, remove it too (patch row + file, restart DSH) |
+| Remove | `cordis_undefine <pluginId>` |
 
 ## Customizing
 
@@ -164,13 +148,12 @@ All colors live in two places inside `plugin/client.js`: the `overrideTokens` ca
 
 ## Architecture
 
-v65 returns to the v59 dynamic-plugin shape: the repository carries only two closure sources plus assets; DSH's dynamic Cordis runtime defines and activates them inside a session — no profile-install machinery, no DSH source changes.
+The theme ships as a dynamic Cordis plugin: the repository carries only two closure sources plus assets; DSH's dynamic Cordis runtime defines and activates them inside a session — no profile-install machinery, no DSH source changes.
 
 ```
 plugin/host.js      # dynamic-plugin host half (Node): 3 asset routes /kimino-bg/* (paths rewritten at install)
 plugin/client.js    # dynamic-plugin browser half: token overrides + component styles + DOM patch-ups (styles.insert)
 assets/             # wallpaper and logos
-companion/          # optional: auto-restore companion (static profile plugin rebuilding the dynamic theme)
 ```
 
 Every side effect (token layer, style tags, event listeners, DOM attributes, routes) is registered on the plugin fiber; `cordis_stop` / `cordis_undefine` fully reclaims them.
@@ -194,7 +177,7 @@ A: Confirm `cordis_run` reported success (approve the request if one is pending)
 <details>
 <summary><strong>The theme vanished after a DSH restart?</strong></summary>
 
-A: Dynamic plugins are process-scoped; that is expected. Re-run the one-paste install to restore, or deploy the auto-restore companion to automate it.
+A: Dynamic plugins are process-scoped; that is expected. Re-run the one-paste install to restore.
 
 </details>
 
@@ -221,7 +204,8 @@ A: Token layers stack, but visuals will fight each other. Enable only one theme 
 
 ## Known limitations
 
-- Dynamic plugins are process-scoped and need re-activation after a DSH restart (automatable with the companion, see Auto-restore).
+- Dynamic plugins are process-scoped and need the one-paste install re-run after a DSH restart.
+- The glass, scrollbar and gradient-mask effects are tuned for Chromium engines (Edge / Chrome); Firefox renders some of them inconsistently — Edge or Chrome recommended.
 - Selectors for the message-scroll rework, sidebar logo swap, and composer highlights depend on DSH frontend build-time hash class names; major DSH upgrades may require a theme update (see FAQ).
 - The theme enforces one dark-glass visual across light and dark modes; there is no separate light variant (see FAQ).
 - Wallpaper and logo routes cache for one hour; hard-refresh after replacing assets.

@@ -31,8 +31,6 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 
 它以动态 Cordis 插件形态交付：把一段安装指令粘贴给 DSH 会话中的 Agent 即完成安装，不修改任何 DSH 源码，也不往 profile 里装包；停用/卸载后页面完全还原。
 
-> v65 回归 v59 验证过的动态插件安装方式（v64 曾引入 `dsh plugin add` 静态 bundle 安装，在部分环境下浏览器半区不加载）；主题内容沿用 v64 全量——消息滚动重构、统计栏胶囊、Cordis 面板样式等都在。
-
 | 维度 | 原生 dsh web | dsh-kimino-theme |
 | --- | --- | --- |
 | 背景 | 纯色 / 纯色渐变 | 电影壁纸 + 全局模糊遮罩 |
@@ -79,6 +77,8 @@ DSH 的会话滚动容器同时包含消息区和输入框（sticky 吸底），
 
 ## 快速开始
 
+> **浏览器建议**：主题大量使用 backdrop-filter 毛玻璃、滚动条定制与 CSS 蒙版，推荐使用 **Microsoft Edge** 或 **Google Chrome**；Firefox 下部分显示效果不兼容（滚动条、渐变蒙版等可能打折）。
+
 ### 一句话安装（推荐）
 
 把下面整段复制粘贴给 DSH 会话中的 Agent，它会完成克隆、路径改写、插件定义与激活：
@@ -124,29 +124,13 @@ git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-th
 3. `cordis_run` 激活（首次 `mode: "run"`，之后 `mode: "update"`）。
 4. 浏览器 **Ctrl + F5** 强制刷新。
 
-### 开机自恢复（可选）
-
-动态插件是进程级的：DSH 重启后主题会消失，重跑安装即可恢复。想免手动，用仓库自带的自恢复伴随插件：
-
-1. 把 `companion/kimino-restore.mjs` 复制到 profile 目录（如 `~/.dsh/profiles/web/`）；
-2. 把文件顶部的 `THEME_DIR = '<CLONE_DIR>'` 改成克隆目录的绝对路径；
-3. 在该目录的 `cordis.patch.yml` 里追加一行：
-
-   ```yaml
-   - insert:
-       - id: kimino-restore
-         name: ./kimino-restore.mjs
-   ```
-
-4. 重启 `dsh web`。之后每个新会话创建时，伴随插件自动从克隆目录读取最新源码重建主题——克隆目录 `git pull` 后无需任何操作。
-
 ### 更新 / 暂停 / 卸载
 
 | 操作 | 方式 |
 | --- | --- |
 | 更新 | 克隆目录 `git pull` → 重跑「一句话安装」（或重新 `cordis_define` 后 `cordis_run mode:"update"`） |
 | 暂停 | `cordis_stop <pluginId>` |
-| 卸载 | `cordis_undefine <pluginId>`；装了伴随插件的一并移除（patch 行 + 文件，重启 DSH） |
+| 卸载 | `cordis_undefine <pluginId>` |
 
 ## 自定义
 
@@ -164,13 +148,12 @@ git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-th
 
 ## 架构
 
-v65 回归 v59 的动态插件形态：仓库只承载两段「闭包源码」与素材，由 DSH 的动态 Cordis 运行时在会话内定义并激活——不依赖 profile 安装机制，也不修改 DSH 源码。
+主题以动态 Cordis 插件形态交付：仓库只承载两段「闭包源码」与素材，由 DSH 的动态 Cordis 运行时在会话内定义并激活——不依赖 profile 安装机制，也不修改 DSH 源码。
 
 ```
 plugin/host.js      # 动态插件宿主半区（Node）：3 个资产路由 /kimino-bg/*（路径安装时改写）
 plugin/client.js    # 动态插件浏览器半区：token 覆盖 + 组件样式 + DOM 补丁（styles.insert）
 assets/             # 壁纸与 Logo
-companion/          # 可选：开机自恢复伴随插件（静态 profile 插件，自动重建动态主题）
 ```
 
 所有副作用（token 层、样式标签、事件监听、DOM 属性、路由）都注册在插件 fiber 上，`cordis_stop` / `cordis_undefine` 即完全还原。
@@ -194,7 +177,7 @@ A: 确认 `cordis_run` 结果为成功（如需审批先通过）；浏览器 Ct
 <details>
 <summary><strong>DSH 重启后主题消失？</strong></summary>
 
-A: 动态插件是进程级的，预期行为。重跑「一句话安装」即恢复；想免手动，按「开机自恢复」部署伴随插件。
+A: 动态插件是进程级的，预期行为。重跑「一句话安装」即恢复。
 
 </details>
 
@@ -221,7 +204,8 @@ A: token 层是叠加式的，但视觉上会互相覆盖。建议同一时间�
 
 ## 已知限制
 
-- 动态插件是进程级的，DSH 重启后需重新激活（可用伴随插件自动化，见「开机自恢复」）。
+- 动态插件是进程级的，DSH 重启后需重跑一次「一句话安装」恢复。
+- 主题的毛玻璃、滚动条与渐变蒙版按 Chromium 内核（Edge / Chrome）打磨，Firefox 下部分显示效果不兼容，推荐使用 Edge 或 Chrome。
 - 消息滚动重构、侧边栏 Logo 替换、输入卡高亮等处的选择器依赖 DSH 前端构建期哈希类名，DSH 大版本升级后可能需要跟随更新（见常见问题）。
 - 主题强制深色玻璃视觉，亮色模式不做单独适配（见常见问题）。
 - 壁纸与 Logo 路由缓存 1 小时，替换素材后需强刷浏览器。

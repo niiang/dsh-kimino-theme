@@ -60,10 +60,12 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 
 ### Composer and placeholder copy
 
-The composer card is redrawn as a navy (`rgba(37,58,125,*)`) glass capsule — 20px radius, 20px backdrop blur, blue border; the session stats bar becomes a centered slim pill. Placeholders are swapped in both UI languages:
+The composer card is redrawn as a navy (`rgba(37,58,125,*)`) glass capsule — 20px radius, 20px backdrop blur, blue border; the session stats bar becomes a centered slim pill. Placeholders are swapped automatically per UI language — the English UI is covered too, with the film's lines kept in their original Japanese:
 
-- Message input: `黄昏之时，我在这里等你。`
-- New-session prompt: `君の名は。想构建怎样的世界？`
+| UI language | Message input | New-session prompt |
+| --- | --- | --- |
+| Chinese | `黄昏之时，我在这里等你。` | `君の名は。想构建怎样的世界？` |
+| English | `黄昏の時、私はここにいるよ。` | `君の名は。どんな世界を構築する？` |
 
 ### Message scrolling and gradient mask
 

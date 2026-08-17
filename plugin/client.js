@@ -5,9 +5,9 @@ return {
     const patchPlaceholders = () => {
       const replacements = {
         '给智能体发消息': '黄昏之时，我在这里等你。',
-        'Message the agent': '黄昏之时，我在这里等你。',
+        'Message the agent': '黄昏の時、私はここにいるよ。',
         '描述你想要构建的内容': '君の名は。想构建怎样的世界？',
-        'Describe what you want to build': '君の名は。想构建怎样的世界？',
+        'Describe what you want to build': '君の名は。どんな世界を構築する？',
       };
       const walk = () => {
         document.querySelectorAll('textarea').forEach((ta) => {

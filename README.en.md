@@ -42,7 +42,9 @@ It ships as a dynamic Cordis plugin: paste one install instruction into a DSH se
 | Install | — | One instruction pasted to the agent |
 | Revert | — | `cordis_stop` / `cordis_undefine` fully reverts |
 
-![Main view: glassmorphism conversation over the wallpaper](docs/screenshots/chat-main.png)
+<p align="center">
+  <img src="docs/screenshots/chat-main.png" alt="Main view: glassmorphism conversation over the wallpaper" width="760">
+</p>
 
 ## Theme details
 
@@ -56,7 +58,13 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
 
-![Sidebar: expanded movie brand mark](docs/screenshots/sidebar.png)
+<p align="center">
+  <img src="docs/screenshots/home-hero.png" alt="Home: large centered movie logo" width="760">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/sidebar.png" alt="Sidebar: expanded movie brand mark" width="180">
+</p>
 
 ### Composer and placeholder copy
 

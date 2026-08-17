@@ -3,7 +3,7 @@
 中文 | [English](README.en.md)
 
 <p align="center">
-  <img src="docs/screenshots/hero-screen.png" alt="dsh-kimino-theme" width="100%">
+  <img src="assets/logo/your-name-movie-logo-blue.svg" alt="Kimi no Na wa" width="460">
 </p>
 
 <p align="center">
@@ -42,6 +42,8 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 | 安装 | — | `dsh plugin --profile web add github:niiang/dsh-kimino-theme` |
 | 还原 | — | 停用/卸载即完全还原 |
 
+![主界面：壁纸上的玻璃拟态会话视图](docs/screenshots/chat-main.png)
+
 ## 主题细节
 
 ### 彗星蓝玻璃拟态
@@ -53,6 +55,8 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 - 壁纸由插件宿主半区以 `/kimino-bg/current.jpg` 路由提供（`assets/current.jpg`），叠加一层轻微的深色渐变保证文字可读性；
 - 侧边栏展开态显示横向电影 Logo，折叠态显示字母标记（两个 SVG，同样由插件路由提供）；
 - 首页（hero）标题替换为居中大尺寸 Logo。
+
+![侧边栏：展开态的电影品牌标识](docs/screenshots/sidebar.png)
 
 ### 输入卡与占位文案
 

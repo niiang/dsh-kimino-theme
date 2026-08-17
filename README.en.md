@@ -3,7 +3,7 @@
 [中文](README.md) | English
 
 <p align="center">
-  <img src="docs/screenshots/hero-screen.png" alt="dsh-kimino-theme" width="100%">
+  <img src="assets/logo/your-name-movie-logo-blue.svg" alt="Kimi no Na wa" width="460">
 </p>
 
 <p align="center">
@@ -42,6 +42,8 @@ It ships as a standard dsh plugin bundle: mounted through the official profile m
 | Install | — | `dsh plugin --profile web add github:niiang/dsh-kimino-theme` |
 | Revert | — | Disable/remove fully reverts the page |
 
+![Main view: glassmorphism conversation over the wallpaper](docs/screenshots/chat-main.png)
+
 ## Theme details
 
 ### Comet-blue glassmorphism
@@ -53,6 +55,8 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 - The wallpaper is served by the host half at `/kimino-bg/current.jpg` (`assets/current.jpg`), with a subtle dark gradient overlay for text legibility;
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
+
+![Sidebar: expanded movie brand mark](docs/screenshots/sidebar.png)
 
 ### Composer and placeholder copy
 

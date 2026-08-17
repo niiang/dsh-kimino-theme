@@ -102,7 +102,6 @@ Install the DSH theme plugin dsh-kimino-theme for me (dynamic-plugin route):
    plugin named "Kimi no Na wa Theme" already exists, append a new
    Package to the same pluginId and cordis_run mode:"update"; otherwise
    create a new plugin (idPrefix "kimino") and cordis_run mode:"run".
-5. Remind me to hard-refresh the browser with Ctrl+F5 afterwards.
 ```
 
 Assets are read straight from the clone; re-run the same block after theme updates to sync.

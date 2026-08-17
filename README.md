@@ -100,7 +100,6 @@ DSH 的会话滚动容器同时包含消息区和输入框（sticky 吸底），
    Kimi no Na wa Theme 的插件已存在，向同一 pluginId 追加新 Package 并
    cordis_run mode:"update"；否则新建插件（idPrefix 用 "kimino"）并
    cordis_run mode:"run"。
-5. 完成后提醒我 Ctrl+F5 强制刷新浏览器。
 ```
 
 素材直接取自克隆目录，无需复制到其他位置；主题更新后重跑上面这段即可同步。

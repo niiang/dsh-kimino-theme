@@ -43,7 +43,7 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 | 还原 | — | `cordis_stop` / `cordis_undefine` 完全还原 |
 
 <p align="center">
-  <img src="docs/screenshots/chat-main.png" alt="主界面：壁纸上的玻璃拟态会话视图" width="760">
+  <img src="docs/screenshots/home-hero.png" alt="主页：居中大尺寸电影 Logo" width="760">
 </p>
 
 ## 主题细节
@@ -59,11 +59,8 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 - 首页（hero）标题替换为居中大尺寸 Logo。
 
 <p align="center">
-  <img src="docs/screenshots/home-hero.png" alt="主页：居中大尺寸电影 Logo" width="760">
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/sidebar.png" alt="侧边栏：展开态的电影品牌标识" width="180">
+  <img src="docs/screenshots/sidebar.png" alt="侧边栏：展开态的电影品牌标识" width="123">
+  <img src="docs/screenshots/chat-main.png" alt="主界面：壁纸上的玻璃拟态会话视图" width="676">
 </p>
 
 ### 输入卡与占位文案

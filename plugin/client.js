@@ -1,3 +1,19 @@
+// Self-sufficiency shim: the dynamic Cordis runner injects `styles` as a
+// closure symbol. Anywhere else — e.g. a static module bundle built from
+// this file by a redistributor — the symbol does not exist and referencing
+// it throws. Provide an equivalent so this source works in both worlds.
+if (typeof styles === 'undefined') {
+  var styles = {
+    insert: (css) => {
+      const el = document.createElement('style');
+      el.id = 'kimino-theme';
+      el.setAttribute('data-plugin', 'dsh-kimino-theme');
+      el.textContent = css;
+      document.head.append(el);
+      return () => el.remove();
+    },
+  };
+}
 return {
   apply(ctx) {
     const theme = ctx.get('theme');

@@ -16,7 +16,7 @@
 
 <p align="center">
   <strong>《你的名字。》(Kimi no Na wa) 主题，为 DeepSeek Harness (DSH) Web GUI 而作</strong><br>
-  <em>彗星蓝玻璃拟态 · 电影壁纸 · Logo 替换 · 输入卡重绘 · 统一滚动条 · 对话式一键安装</em>
+  <em>彗星蓝玻璃拟态 · 电影壁纸 · Logo 替换 · 输入卡重绘 · 统一滚动条 · 一条命令安装</em>
 </p>
 
 <div align="center">
@@ -29,7 +29,7 @@
 
 dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样：一张电影壁纸垫底，全部界面表面换成半透明毛玻璃，交互色统一为彗星蓝（`#93C5FD`），侧边栏品牌与首页标题替换为电影 Logo，输入卡重绘为藏蓝玻璃胶囊，占位文案换成「黄昏之时，我在这里等你。」。
 
-它以动态 Cordis 插件形态交付：把一段安装指令粘贴给 DSH 会话中的 Agent 即完成安装，不修改任何 DSH 源码，也不往 profile 里装包；停用/卸载后页面完全还原。
+它是一个标准的 dsh 插件包：一条 `dsh plugin` 命令装进 profile，随 DSH 启动常驻，不修改任何 DSH 源码；卸载后页面完全还原。
 
 | 维度 | 原生 dsh web | dsh-kimino-theme |
 | --- | --- | --- |
@@ -39,8 +39,8 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 | 输入卡 | 默认样式 | 藏蓝玻璃卡片，占位文案主题化 |
 | 滚动条 | 默认 | 全局蓝紫玻璃细滚动条 |
 | 消息列底部 | 直切 | 40px 渐变淡出蒙版 |
-| 安装 | — | 一段指令粘贴给 Agent，自动完成 |
-| 还原 | — | `cordis_stop` / `cordis_undefine` 完全还原 |
+| 安装 | — | `dsh plugin --profile web add ...` 一条命令 |
+| 还原 | — | 卸载即完全还原 |
 
 <p align="center">
   <img src="docs/screenshots/home-hero.png" alt="主页：居中大尺寸电影 Logo" width="760">
@@ -54,7 +54,7 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 
 ### 壁纸与 Logo
 
-- 壁纸由插件宿主半区以 `/kimino-bg/current.jpg` 路由提供（克隆目录的 `assets/current.jpg`），叠加一层轻微的深色渐变保证文字可读性；
+- 壁纸由插件宿主半区以 `/kimino-bg/current.jpg` 路由提供（包内 `assets/current.jpg`），叠加一层轻微的深色渐变保证文字可读性；
 - 侧边栏展开态显示横向电影 Logo，折叠态显示字母标记（两个 SVG，同样由插件路由提供）；
 - 首页（hero）标题替换为居中大尺寸 Logo。
 
@@ -84,74 +84,54 @@ DSH 的会话滚动容器同时包含消息区和输入框（sticky 吸底），
 
 > **浏览器建议**：主题大量使用 backdrop-filter 毛玻璃、滚动条定制与 CSS 蒙版，推荐使用 **Microsoft Edge** 或 **Google Chrome**；Firefox 下部分显示效果不兼容（滚动条、渐变蒙版等可能打折）。
 
-### 一句话安装（推荐）
+### 系统要求
 
-把下面整段复制粘贴给 DSH 会话中的 Agent，它会完成克隆、路径改写、插件定义与激活：
+- 已安装 DeepSeek Harness，`dsh web` 可正常启动；
+- 机器上有 pnpm（`dsh plugin` 内部使用；Node.js 自带的 corepack 可提供）。
 
-```text
-请为我安装 DSH 主题插件 dsh-kimino-theme（动态插件方式）：
-1. 将 https://github.com/niiang/dsh-kimino-theme 克隆到
-   ~/.dsh/themes/dsh-kimino-theme（目录不存在则创建；已存在则先 git pull）。
-2. 读取克隆中的 plugin/host.js 与 plugin/client.js。
-3. 将 host.js 顶部 bgFile / logoFile / letterFile 三个常量中的
-   <CLONE_DIR> 占位符改写为该克隆目录的绝对路径（Windows 注意反斜杠
-   转义为 \\），不得保留占位符。
-4. 以这两段代码为 code.host / code.client 调用 cordis_define：若名为
-   Kimi no Na wa Theme 的插件已存在，向同一 pluginId 追加新 Package 并
-   cordis_run mode:"update"；否则新建插件（idPrefix 用 "kimino"）并
-   cordis_run mode:"run"。
-```
-
-素材直接取自克隆目录，无需复制到其他位置；主题更新后重跑上面这段即可同步。
-
-### 手动安装
-
-```bash
-git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-theme
-```
-
-1. 打开 `plugin/host.js`，把顶部三个常量里的 `<CLONE_DIR>` 改成本机克隆目录的绝对路径：
-
-   ```js
-   // Linux / macOS
-   const bgFile = '/home/you/.dsh/themes/dsh-kimino-theme/assets/current.jpg';
-   const logoFile = '/home/you/.dsh/themes/dsh-kimino-theme/assets/logo/your-name-movie-logo-blue.svg';
-   const letterFile = '/home/you/.dsh/themes/dsh-kimino-theme/assets/logo/logo-letter.svg';
-
-   // Windows（注意反斜杠转义）
-   const bgFile = 'C:\\Users\\you\\.dsh\\themes\\dsh-kimino-theme\\assets\\current.jpg';
-   const logoFile = 'C:\\Users\\you\\.dsh\\themes\\dsh-kimino-theme\\assets\\logo\\your-name-movie-logo-blue.svg';
-   const letterFile = 'C:\\Users\\you\\.dsh\\themes\\dsh-kimino-theme\\assets\\logo\\logo-letter.svg';
-   ```
-
-2. 在 DSH 会话中调用 `cordis_define`：`code.host` 为 `plugin/host.js` 的内容，`code.client` 为 `plugin/client.js` 的内容（新插件，idPrefix 用 `"kimino"`）。
-3. `cordis_run` 激活（首次 `mode: "run"`，之后 `mode: "update"`）。
-4. 浏览器 **Ctrl + F5** 强制刷新。
-
-### 静态安装（可选）
-
-也可以作为标准 dsh 插件包装进 profile（需要 pnpm）：
+### 安装
 
 ```sh
 dsh plugin --profile web add github:niiang/dsh-kimino-theme
-dsh web   # 重启后生效
+dsh web   # 重启 DSH 生效
 ```
 
-> 静态安装后随 DSH 启动常驻，无需重装；动态方式则需每次重启后重跑（见常见问题）。两种方式二选一即可。
+壁纸出现、侧边栏 Logo 变化，即安装成功。安装后随 DSH 启动常驻，无需每次重装。
 
-### 更新 / 暂停 / 卸载
+### 更新
 
-| 操作 | 方式 |
-| --- | --- |
-| 更新 | 克隆目录 `git pull` → 重跑「一句话安装」（或重新 `cordis_define` 后 `cordis_run mode:"update"`） |
-| 暂停 | `cordis_stop <pluginId>` |
-| 卸载 | `cordis_undefine <pluginId>` |
+```sh
+dsh plugin --profile web update dsh-kimino-theme
+dsh web   # 重启生效
+```
+
+### 暂时关闭（不卸载）
+
+编辑 `~/.dsh/profiles/web/package.json`，把 `dsh.profile.bundles` 数组中的 `"dsh-kimino-theme"` 一行删掉，重启 `dsh web` 即关闭；想再启用就把该行加回，重启即可。
+
+> 注意：之后若执行其他插件的 `dsh plugin add` / `update`，CLI 会按已安装依赖自动对账，可能把它重新挂回层列表——长期不用请直接卸载。
+
+### 卸载
+
+```sh
+dsh plugin --profile web remove dsh-kimino-theme
+dsh web   # 重启后页面完全还原
+```
 
 ## 自定义
 
+自定义素材需本地克隆并改用 `link:` 安装：
+
+```sh
+git clone https://github.com/niiang/dsh-kimino-theme <你的目录>
+dsh plugin --profile web remove dsh-kimino-theme        # 若装过远端版
+dsh plugin --profile web add link:<你的目录的绝对路径>
+dsh web
+```
+
 ### 换壁纸
 
-替换克隆目录中的 `assets/current.jpg`（保持文件名不变），浏览器强刷（Ctrl+F5）即可，无需重新定义插件。任何 16:9 的高清图都合适；仓库默认壁纸约 5MB，路由缓存 1 小时。
+替换克隆目录中的 `assets/current.jpg`（保持文件名不变），浏览器强刷（Ctrl+F5）即可。任何 16:9 的高清图都合适；仓库默认壁纸约 5MB，路由缓存 1 小时。
 
 ### 换 Logo
 
@@ -159,41 +139,42 @@ dsh web   # 重启后生效
 
 ### 调色
 
-全部颜色集中在两处：token 覆盖在 `plugin/client.js` 的 `overrideTokens` 调用里，组件样式在同一文件 `styles.insert` 的样式表字符串里。改完重新 `cordis_define` + `cordis_run mode:"update"` 并强刷。`docs/theme-tokens.md` 有按用途分组的速查表。
+全部颜色集中在 `bundle/client.js` 两处：token 覆盖在 `overrideTokens` 调用里，组件样式在样式表字符串里。改完重启 `dsh web` 并强刷。`docs/theme-tokens.md` 有按用途分组的速查表。
 
 ## 架构
 
-主题以动态 Cordis 插件形态交付：仓库只承载两段「闭包源码」与素材，由 DSH 的动态 Cordis 运行时在会话内定义并激活——不依赖 profile 安装机制，也不修改 DSH 源码。
+主题是一个标准的 dsh 插件包（bundle）：`package.json` 声明 `dsh.bundle` 与 `dsh.client`，`dsh plugin add` 装进 profile 并挂上插件行——不修改 DSH 源码。
 
 ```
-plugin/host.js      # 动态插件宿主半区（Node）：3 个资产路由 /kimino-bg/*（路径安装时改写）
-plugin/client.js    # 动态插件浏览器半区：token 覆盖 + 组件样式 + DOM 补丁（styles.insert）
-bundle/             # 静态安装形态：dsh.plugin add 装的就是这两件（内容与 plugin/ 同源）
-assets/             # 壁纸与 Logo
+bundle/host.js       # 插件宿主半区（Node）：3 个资产路由 /kimino-bg/*（路径相对包内解析，装哪都能用）
+bundle/client.js     # 插件浏览器半区：token 覆盖 + 组件样式 + DOM 补丁
+cordis.patch.yml     # 插件行清单：dsh plugin add 挂载的入口
+assets/              # 壁纸与 Logo
+plugin/              # 会话内动态注入用的同源闭包源码（高级用法，一般无需关心）
 ```
 
-所有副作用（token 层、样式标签、事件监听、DOM 属性、路由）都注册在插件 fiber 上，`cordis_stop` / `cordis_undefine` 即完全还原。
+所有副作用（token 层、样式标签、事件监听、DOM 属性、路由）都注册在插件 fiber 上，禁用/卸载即完全还原。
 
 ## 常见问题
 
 <details>
+<summary><strong>装完重启了，页面没变化？</strong></summary>
+
+A: 确认命令里带 `--profile web`（装进了正确的 profile）；浏览器 Ctrl+F5 强刷一次；仍不行时看 `dsh web` 启动日志有没有 `[kimino-theme] host half active` 与安装时的警告信息。
+
+</details>
+
+<details>
+<summary><strong>安装时警告 declares no dsh.bundle？</strong></summary>
+
+A: 说明装到的版本不含静态安装声明（v65 之前的旧 tag）。确认仓库地址为 `github:niiang/dsh-kimino-theme`（不带 `#版本号` 时默认装最新 main），按「安装」小节的命令重装。
+
+</details>
+
+<details>
 <summary><strong>背景图 / Logo 404？</strong></summary>
 
-A: `plugin/host.js` 顶部的 `<CLONE_DIR>` 占位符没有改写为本机绝对路径，或克隆目录被移动/删除。检查三个常量后重新 `cordis_define` + `cordis_run mode:"update"`，强刷浏览器。
-
-</details>
-
-<details>
-<summary><strong>装完激活了，页面没变化？</strong></summary>
-
-A: 确认 `cordis_run` 结果为成功（如需审批先通过）；浏览器 Ctrl+F5 强刷一次；仍不行时在会话里让 Agent 用 `cordis_inspect_self` 查看插件运行状态与诊断信息。
-
-</details>
-
-<details>
-<summary><strong>DSH 重启后主题消失？</strong></summary>
-
-A: 动态插件是进程级的，预期行为。重跑「一句话安装」即恢复。
+A: 静态安装的资产路径相对包内解析，正常不会发生。多为 profile 的 node_modules 被手动清理或链接损坏所致：重新执行一次安装命令即可修复。
 
 </details>
 
@@ -220,7 +201,6 @@ A: token 层是叠加式的，但视觉上会互相覆盖。建议同一时间�
 
 ## 已知限制
 
-- 动态插件是进程级的，DSH 重启后需重跑一次「一句话安装」恢复。
 - 主题的毛玻璃、滚动条与渐变蒙版按 Chromium 内核（Edge / Chrome）打磨，Firefox 下部分显示效果不兼容，推荐使用 Edge 或 Chrome。
 - 消息滚动重构、侧边栏 Logo 替换、输入卡高亮等处的选择器依赖 DSH 前端构建期哈希类名，DSH 大版本升级后可能需要跟随更新（见常见问题）。
 - 主题强制深色玻璃视觉，亮色模式不做单独适配（见常见问题）。

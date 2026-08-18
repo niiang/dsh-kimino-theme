@@ -1,0 +1,9 @@
+# dsh-kimino-theme bundle patch: mounts the theme plugin row for static
+# installs (dsh plugin --profile web add github:niiang/dsh-kimino-theme).
+# The row name resolves to this package: the host half is the package
+# main (bundle/host.js - wallpaper/logo asset routes) and the browser half
+# is the ./client export (bundle/client.js), picked up by the client module
+# system via the dsh.client declaration in package.json.
+- insert:
+    - id: kimino-theme
+      name: dsh-kimino-theme

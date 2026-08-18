@@ -1,12 +1,31 @@
 {
   "name": "dsh-kimino-theme",
-  "version": "65.1.0",
-  "description": "Kimi no Na wa (Your Name) theme for DeepSeek Harness Web GUI — dynamic Cordis plugin source (host + client halves) with wallpaper/logo assets",
+  "version": "66.0.0",
+  "description": "Kimi no Na wa (Your Name) theme for DeepSeek Harness Web GUI — dynamic Cordis plugin source (host + client halves) plus an installable dsh bundle, with wallpaper/logo assets",
+  "type": "module",
   "license": "MIT",
+  "main": "bundle/host.js",
+  "exports": {
+    ".": "./bundle/host.js",
+    "./client": "./bundle/client.js",
+    "./package.json": "./package.json"
+  },
   "files": [
     "plugin",
-    "assets"
+    "bundle",
+    "assets",
+    "cordis.patch.yml"
   ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [],
+      "immediately": true
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/niiang/dsh-kimino-theme.git"
@@ -14,6 +33,7 @@
   "keywords": [
     "dsh",
     "deepseek-harness",
+    "dsh-plugin",
     "theme",
     "your-name",
     "kimi-no-na-wa"

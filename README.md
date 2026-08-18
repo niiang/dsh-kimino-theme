@@ -128,6 +128,17 @@ git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-th
 3. `cordis_run` 激活（首次 `mode: "run"`，之后 `mode: "update"`）。
 4. 浏览器 **Ctrl + F5** 强制刷新。
 
+### 静态安装（可选）
+
+也可以作为标准 dsh 插件包装进 profile（需要 pnpm）：
+
+```sh
+dsh plugin --profile web add github:niiang/dsh-kimino-theme
+dsh web   # 重启后生效
+```
+
+> 静态安装后随 DSH 启动常驻，无需重装；动态方式则需每次重启后重跑（见常见问题）。两种方式二选一即可。
+
 ### 更新 / 暂停 / 卸载
 
 | 操作 | 方式 |
@@ -157,6 +168,7 @@ git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-th
 ```
 plugin/host.js      # 动态插件宿主半区（Node）：3 个资产路由 /kimino-bg/*（路径安装时改写）
 plugin/client.js    # 动态插件浏览器半区：token 覆盖 + 组件样式 + DOM 补丁（styles.insert）
+bundle/             # 静态安装形态：dsh.plugin add 装的就是这两件（内容与 plugin/ 同源）
 assets/             # 壁纸与 Logo
 ```
 

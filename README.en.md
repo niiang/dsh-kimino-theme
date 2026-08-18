@@ -130,6 +130,17 @@ git clone https://github.com/niiang/dsh-kimino-theme ~/.dsh/themes/dsh-kimino-th
 3. Activate with `cordis_run` (`mode: "run"` the first time, `mode: "update"` afterwards).
 4. Hard-refresh the browser with **Ctrl + F5**.
 
+### Static install (optional)
+
+The theme can also be installed into a profile as a standard dsh plugin package (requires pnpm):
+
+```sh
+dsh plugin --profile web add github:niiang/dsh-kimino-theme
+dsh web   # restart to apply
+```
+
+> A static install persists across DSH restarts; the dynamic route needs a re-run after each restart (see FAQ). Pick one of the two routes.
+
 ### Update / disable / remove
 
 | Action | How |
@@ -159,6 +170,7 @@ The theme ships as a dynamic Cordis plugin: the repository carries only two clos
 ```
 plugin/host.js      # dynamic-plugin host half (Node): 3 asset routes /kimino-bg/* (paths rewritten at install)
 plugin/client.js    # dynamic-plugin browser half: token overrides + component styles + DOM patch-ups (styles.insert)
+bundle/             # static install form: what dsh plugin add mounts (same source as plugin/)
 assets/             # wallpaper and logos
 ```
 

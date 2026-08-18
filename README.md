@@ -65,7 +65,7 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 
 ### 输入卡与占位文案
 
-输入卡重绘为藏蓝（`rgba(37,58,125,*)`）玻璃胶囊：圆角 20px、20px 背景模糊、蓝色描边；会话统计栏变成居中的细胶囊。占位文案按界面语言自动替换——英文界面下同样生效，电影相关台词保留日语原味：
+输入卡重绘为藏蓝玻璃胶囊，占位文案按界面语言自动替换：
 
 | 界面语言 | 输入框 | 新会话描述 |
 | --- | --- | --- |
@@ -74,11 +74,11 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 
 ### 消息滚动与渐变蒙版
 
-DSH 的会话滚动容器同时包含消息区和输入框（sticky 吸底），直接加蒙版会裁到输入框。主题把滚动视口下沉到纯消息容器：消息列最后 40px 平滑淡出、输入框零裁切；配套的滚动事件接力修复了「回到底部」按钮在内层滚动器下不出现的问题；输入卡聚焦时的滚轮隔离防止壁纸层跟着滚动。
+消息列底部 40px 平滑淡出，输入框零裁切；修复了「回到底部」按钮不出现的问题。
 
 ### 统一滚动条
 
-全局滚动条统一为蓝紫玻璃风格：10px 宽、圆角、半透明蓝拇指（悬停加深），同时适配 WebKit/Blink 与 Firefox 标准属性。
+全局滚动条统一为蓝紫玻璃风格，适配主流浏览器。
 
 ## 快速开始
 
@@ -107,9 +107,7 @@ dsh web   # 重启生效
 
 ### 暂时关闭（不卸载）
 
-编辑 `~/.dsh/profiles/web/package.json`，把 `dsh.profile.bundles` 数组中的 `"dsh-kimino-theme"` 一行删掉，重启 `dsh web` 即关闭；想再启用就把该行加回，重启即可。
-
-> 注意：之后若执行其他插件的 `dsh plugin add` / `update`，CLI 会按已安装依赖自动对账，可能把它重新挂回层列表——长期不用请直接卸载。
+编辑 `~/.dsh/profiles/web/package.json`，删掉 `dsh.profile.bundles` 数组中的 `"dsh-kimino-theme"` 一行，重启 `dsh web` 即关闭；加回该行再重启即恢复。长期不用请直接卸载。
 
 ### 卸载
 
@@ -120,26 +118,25 @@ dsh web   # 重启后页面完全还原
 
 ## 自定义
 
-自定义素材需本地克隆并改用 `link:` 安装：
+需本地克隆并改用 `link:` 安装：
 
 ```sh
 git clone https://github.com/niiang/dsh-kimino-theme <你的目录>
-dsh plugin --profile web remove dsh-kimino-theme        # 若装过远端版
 dsh plugin --profile web add link:<你的目录的绝对路径>
 dsh web
 ```
 
 ### 换壁纸
 
-替换克隆目录中的 `assets/current.jpg`（保持文件名不变），浏览器强刷（Ctrl+F5）即可。任何 16:9 的高清图都合适；仓库默认壁纸约 5MB，路由缓存 1 小时。
+替换克隆目录中的 `assets/current.jpg`（保持文件名不变），浏览器强刷（Ctrl+F5）即可。
 
 ### 换 Logo
 
-替换 `assets/logo/your-name-movie-logo-blue.svg`（展开态，建议横向）与 `assets/logo/logo-letter.svg`（折叠态标记，建议方形），强刷生效。
+替换 `assets/logo/` 下的两个 SVG，强刷生效。
 
 ### 调色
 
-全部颜色集中在 `bundle/client.js` 两处：token 覆盖在 `overrideTokens` 调用里，组件样式在样式表字符串里。改完重启 `dsh web` 并强刷。`docs/theme-tokens.md` 有按用途分组的速查表。
+颜色集中在 `bundle/client.js`：token 覆盖与组件样式两处，改完重启 `dsh web` 并强刷。速查表见 [docs/theme-tokens.md](docs/theme-tokens.md)。
 
 ## 架构
 

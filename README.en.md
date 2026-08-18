@@ -65,7 +65,7 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 
 ### Composer and placeholder copy
 
-The composer card is redrawn as a navy (`rgba(37,58,125,*)`) glass capsule — 20px radius, 20px backdrop blur, blue border; the session stats bar becomes a centered slim pill. Placeholders are swapped automatically per UI language — the English UI is covered too, with the film's lines kept in their original Japanese:
+The composer card is redrawn as a navy glass capsule; placeholders swap automatically per UI language:
 
 | UI language | Message input | New-session prompt |
 | --- | --- | --- |
@@ -74,11 +74,11 @@ The composer card is redrawn as a navy (`rgba(37,58,125,*)`) glass capsule — 2
 
 ### Message scrolling and gradient mask
 
-DSH's conversation scroll container holds both the message list and the sticky composer, so a naive mask would clip the input box. The theme sinks the scroll viewport down to the pure message container: the last 40px of the message list fades out smoothly with zero clipping on the composer; a scroll-event relay restores the "scroll to bottom" button under the inner scroller; a wheel guard stops the wallpaper layer from scrolling while the composer is focused.
+The last 40px of the message list fades out smoothly with zero clipping on the composer; the "scroll to bottom" button works under the inner scroller.
 
 ### Unified scrollbars
 
-Every scrollbar adopts the blue-glass style: 10px wide, rounded, translucent blue thumb (deepening on hover), with WebKit/Blink and Firefox standard properties both covered.
+Global scrollbars adopt the blue-glass style across mainstream browsers.
 
 ## Quick start
 
@@ -107,9 +107,7 @@ dsh web   # restart to apply
 
 ### Disable temporarily (without uninstalling)
 
-Edit `~/.dsh/profiles/web/package.json`, delete the `"dsh-kimino-theme"` line from the `dsh.profile.bundles` array, and restart `dsh web`. To re-enable, add the line back and restart.
-
-> Note: a later `dsh plugin add` / `update` for another plugin reconciles installed dependencies and may remount this one — if you don't plan to use it, uninstall instead.
+Edit `~/.dsh/profiles/web/package.json`, delete the `"dsh-kimino-theme"` line from the `dsh.profile.bundles` array, restart `dsh web`; add the line back and restart to re-enable. If you won't use it for long, uninstall instead.
 
 ### Uninstall
 
@@ -120,26 +118,25 @@ dsh web   # restart; the page fully reverts
 
 ## Customizing
 
-Customizing assets requires a local clone and a `link:` install:
+Requires a local clone with a `link:` install:
 
 ```sh
 git clone https://github.com/niiang/dsh-kimino-theme <your-dir>
-dsh plugin --profile web remove dsh-kimino-theme        # if the remote version was installed
 dsh plugin --profile web add link:/absolute/path/to/<your-dir>
 dsh web
 ```
 
 ### Wallpaper
 
-Replace `assets/current.jpg` in your clone (keep the filename) and hard-refresh (Ctrl+F5). Any high-resolution 16:9 image works; the bundled wallpaper is about 5MB and the route caches it for one hour.
+Replace `assets/current.jpg` in your clone (keep the filename) and hard-refresh (Ctrl+F5).
 
 ### Logos
 
-Replace `assets/logo/your-name-movie-logo-blue.svg` (expanded, landscape recommended) and `assets/logo/logo-letter.svg` (collapsed mark, square recommended), then hard-refresh.
+Replace the two SVGs under `assets/logo/`, then hard-refresh.
 
 ### Colors
 
-All colors live in two places inside `bundle/client.js`: the `overrideTokens` call (design tokens) and the stylesheet string (component styles). After editing, restart `dsh web` and hard-refresh. [docs/theme-tokens.md](docs/theme-tokens.md) has a grouped cheat sheet (Chinese).
+Colors live in `bundle/client.js` (token overrides + component styles); restart `dsh web` and hard-refresh after editing. Cheat sheet: [docs/theme-tokens.md](docs/theme-tokens.md) (Chinese).
 
 ## Architecture
 

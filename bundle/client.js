@@ -151,6 +151,10 @@ window.__ModuleLoader__.load({
       // 2) 输入卡非文本区（附件行 / 按钮等）滚轮：原生时代由外层 scrollBody
       //    承接，重构后补一条转发到内层消息滚动器，保持既有手感。文本区
       //    （[data-input-scroll]）仍由上面的 composerWheel 守卫全权处理。
+      //    例外：输入卡内的弹出面板（模型选择 / effort 菜单等）自带滚动区——
+      //    目标与卡根之间若存在中间滚动容器，滚轮归它所有：面板滚得动就滚
+      //    面板，滚到边界就吞掉，绝不转发给外层会话（否则会出现
+      //    「在模型菜单上滚动 → 背后聊天区跟着滚」）。
       const cardChromeWheel = (event) => {
         if (event.deltaY === 0) return;
         const target = event.target;
@@ -158,6 +162,20 @@ window.__ModuleLoader__.load({
         if (target.closest('[data-input-scroll]')) return;
         const card = target.closest('[data-composer-card]');
         if (!card) return;
+        let node = target;
+        while (node instanceof HTMLElement && node !== card) {
+          const oy = getComputedStyle(node).overflowY;
+          if (oy === 'auto' || oy === 'scroll') {
+            const canConsume = node.scrollHeight > node.clientHeight + 1
+              && !((event.deltaY < 0 && node.scrollTop <= 0)
+                || (event.deltaY > 0 && node.scrollTop + node.clientHeight >= node.scrollHeight - 1));
+            if (canConsume) node.scrollTop += event.deltaY;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return;
+          }
+          node = node.parentElement;
+        }
         const root = card.closest('.wSkVaW_root');
         const real = root === null ? null : root.querySelector('.Md3f7G_scroll');
         if (!(real instanceof HTMLElement)) return;

@@ -118,6 +118,12 @@ dsh plugin --profile web remove dsh-kimino-theme
 dsh web   # restart; the page fully reverts
 ```
 
+### Skin-center route (optional)
+
+If you use the dsh-web-ui skin-center, the theme can also be installed as a skin package: copy the repository's `skin/kimino/` directory to `~/.dsh/skins/kimino/` and refresh — it appears in Settings -> Skin Center with try-on / one-click switch / mutual exclusion.
+
+> Note: manually placed skins skip the `hooks.mjs` behavioral enhancements (placeholder copy, scroll polish) due to the skin-center provenance gate — visuals (wallpaper, palette, logos, glass) are complete; a dsh-market install enables everything. Pick one route at a time.
+
 ## Customizing
 
 Requires a local clone with a `link:` install:
@@ -150,6 +156,7 @@ bundle/client.js     # plugin browser half: token overrides + component styles +
 cordis.patch.yml     # plugin row manifest: the entry dsh plugin add mounts
 assets/              # wallpaper and logos
 plugin/              # same-source closure code for in-session dynamic injection (advanced; normally not needed)
+skin/kimino/         # skin-center package: skin.json v2 + skin.css + patches.css + hooks.mjs
 ```
 
 Every side effect (token layer, style tag, event listeners, DOM attributes, routes) is registered on the plugin fiber; disable/remove fully reclaims them.

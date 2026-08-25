@@ -118,6 +118,12 @@ dsh plugin --profile web remove dsh-kimino-theme
 dsh web   # 重启后页面完全还原
 ```
 
+### 皮肤中心方式（可选）
+
+若使用 dsh-web-ui 的皮肤中心（skin-center），可改以皮肤包形式安装：把仓库 `skin/kimino/` 整个目录拷到 `~/.dsh/skins/kimino/`，刷新页面即出现在「设置 → 皮肤中心」，支持试穿 / 一键切换 / 互斥管理。
+
+> 说明：手工投放的皮肤因皮肤中心的溯源安全门不带 `hooks.mjs` 行为增强（占位文案、滚动优化）——壁纸、配色、Logo、玻璃样式等视觉完整；经 dsh-market 安装则功能全量。与插件安装方式二选一。
+
 ## 自定义
 
 需本地克隆并改用 `link:` 安装：
@@ -150,6 +156,7 @@ bundle/client.js     # 插件浏览器半区：token 覆盖 + 组件样式 + DOM
 cordis.patch.yml     # 插件行清单：dsh plugin add 挂载的入口
 assets/              # 壁纸与 Logo
 plugin/              # 会话内动态注入用的同源闭包源码（高级用法，一般无需关心）
+skin/kimino/         # 皮肤中心（skin-center）皮肤包：skin.json v2 + skin.css + patches.css + hooks.mjs
 ```
 
 所有副作用（token 层、样式标签、事件监听、DOM 属性、路由）都注册在插件 fiber 上，禁用/卸载即完全还原。

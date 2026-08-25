@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.linxin666.org/dsh-skin/v2.json",
+  "skinManifestVersion": 2,
+  "id": "kimino",
+  "name": "君の名は",
+  "nameEn": "Kimi no Na wa",
+  "version": "1.0.0",
+  "author": "niiang",
+  "tagline": "彗星蓝玻璃拟态 · 电影壁纸 · 黄昏之时",
+  "description": "《你的名字。》主题皮肤：电影壁纸垫底，全局彗星蓝（#93C5FD）毛玻璃拟态，深空蓝半透明表面与低饱和蓝描边贯穿亮暗两态；侧边栏与首页替换为电影 Logo，输入卡为藏蓝玻璃胶囊，占位文案换成「黄昏之时，我在这里等你。」（日语台词见 hooks 说明）。视觉完整，行为增强（占位文案与滚动优化）需经市场安装启用。",
+  "tags": [
+    "kimino",
+    "your-name",
+    "kimi-no-na-wa",
+    "comet-blue",
+    "glassmorphism",
+    "anime",
+    "cinematic"
+  ],
+  "accent": "#93C5FD",
+  "order": 60,
+  "license": "MIT (code) — artwork © CoMix Wave Films / Toho, personal desktop use only",
+  "sourceUrl": "https://github.com/niiang/dsh-kimino-theme",
+  "attribution": "Wallpaper and logo assets derive from promotional material of the film Kimi no Na wa (2016); copyright belongs to CoMix Wave Films, Toho and other rights holders.",
+  "preview": {
+    "light": "preview/light.png",
+    "dark": "preview/dark.png"
+  },
+  "requires": {
+    "contracts": [
+      {
+        "apiVersion": "x-org.linxin666.skin-center/v1alpha1",
+        "kind": "SkinHooks",
+        "optional": true
+      }
+    ]
+  },
+  "contributes": {
+    "stylesheet": "skin.css",
+    "patches": "patches.css",
+    "backgroundMedia": {
+      "light": {
+        "type": "image",
+        "src": "assets/wallpaper.jpg",
+        "scrim": "linear-gradient(rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%)"
+      },
+      "dark": {
+        "type": "image",
+        "src": "assets/wallpaper.jpg",
+        "scrim": "linear-gradient(rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%)"
+      }
+    }
+  },
+  "facets": {
+    "client": {
+      "entry": "hooks.mjs",
+      "apiVersion": "x-org.linxin666.skin-center/v1alpha1"
+    }
+  }
+}

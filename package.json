@@ -28,7 +28,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/niiang/dsh-kimino-theme.git"
+    "url": "git+https://github.com/niiang/dsh-kimino-theme.git",
+    "directory": "."
+  },
+  "author": "niiang",
+  "homepage": "https://github.com/niiang/dsh-kimino-theme#readme",
+  "bugs": {
+    "url": "https://github.com/niiang/dsh-kimino-theme/issues"
   },
   "keywords": [
     "dsh",

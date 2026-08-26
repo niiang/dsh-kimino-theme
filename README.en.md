@@ -94,8 +94,14 @@ Global scrollbars adopt the blue-glass style across mainstream browsers.
 ### Install
 
 ```sh
-dsh plugin --profile web add github:niiang/dsh-kimino-theme
+dsh plugin --profile web add dsh-kimino-theme
 dsh web   # restart DSH to apply
+```
+
+Or install straight from GitHub:
+
+```sh
+dsh plugin --profile web add github:niiang/dsh-kimino-theme
 ```
 
 The wallpaper appearing and the sidebar logo changing confirm the install. The theme then persists across DSH restarts.

@@ -94,8 +94,14 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 ### 安装
 
 ```sh
-dsh plugin --profile web add github:niiang/dsh-kimino-theme
+dsh plugin --profile web add dsh-kimino-theme
 dsh web   # 重启 DSH 生效
+```
+
+也可以直接从 GitHub 安装：
+
+```sh
+dsh plugin --profile web add github:niiang/dsh-kimino-theme
 ```
 
 壁纸出现、侧边栏 Logo 变化，即安装成功。安装后随 DSH 启动常驻，无需每次重装。

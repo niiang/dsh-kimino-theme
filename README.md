@@ -237,3 +237,13 @@ A: token 层是叠加式的，但视觉上会互相覆盖。建议同一时间�
 [报告问题](https://github.com/niiang/dsh-kimino-theme/issues) · [功能建议](https://github.com/niiang/dsh-kimino-theme/issues)
 
 </div>
+
+## 成长曲线
+
+> 每天自动更新（GitHub Actions）。左轴：**累计下载量**（蓝色）；右轴：**Star 数**（紫色）——两个量级不同，使用独立双纵轴。
+
+<p align="center">
+  <img src="docs/stats.svg" alt="dsh-kimino-theme 每日 Star × 累计下载量成长曲线" width="900"/>
+</p>
+
+*数据每 24 小时自动采集一次：下载量来自 [npm 官方 API](https://api.npmjs.org/downloads/range/2026-08-26:2026-12-31/dsh-kimino-theme)，Star 来自 [GitHub API](https://github.com/niiang/dsh-kimino-theme/stargazers)。*

@@ -237,3 +237,13 @@ The wallpaper and logo assets under `assets/` derive from promotional material o
 [Report an issue](https://github.com/niiang/dsh-kimino-theme/issues) · [Suggest a feature](https://github.com/niiang/dsh-kimino-theme/issues)
 
 </div>
+
+## Growth
+
+> Auto-updated daily via GitHub Actions. Left axis: **cumulative downloads** (blue); right axis: **stars** (purple) — different magnitudes, independent dual axes.
+
+<p align="center">
+  <img src="docs/stats.svg" alt="dsh-kimino-theme daily stars x cumulative downloads growth chart" width="900"/>
+</p>
+
+*Data collected every 24 hours: downloads from the [npm registry API](https://api.npmjs.org/downloads/range/2026-08-26:2026-12-31/dsh-kimino-theme), stars from the [GitHub API](https://github.com/niiang/dsh-kimino-theme/stargazers).*

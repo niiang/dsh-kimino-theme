@@ -1,13 +1,63 @@
 [
   {
+    "date": "2026-08-16",
+    "stars": 0,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-17",
+    "stars": 1,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-18",
+    "stars": 8,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-19",
+    "stars": 14,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-20",
+    "stars": 16,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-21",
+    "stars": 17,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-22",
+    "stars": 18,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-23",
+    "stars": 19,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-24",
+    "stars": 20,
+    "downloads": 0
+  },
+  {
+    "date": "2026-08-25",
+    "stars": 23,
+    "downloads": 0
+  },
+  {
     "date": "2026-08-26",
     "downloads": 110,
-    "stars": 26
+    "stars": 23
   },
   {
     "date": "2026-08-27",
     "downloads": 110,
-    "stars": 26
+    "stars": 24
   },
   {
     "date": "2026-08-28",

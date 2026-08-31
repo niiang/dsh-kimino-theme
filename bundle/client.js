@@ -464,7 +464,7 @@ div[role="menu"] > div {
 .hHd-Xa_collapsed .hHd-Xa_toggle {
   position: relative !important;
 }
-.hHd-Xa_collapsed .hHd-Xa_toggle .hHd-Xa_railFish {
+.hHd-Xa_collapsed .hHd-Xa_toggle > * {
   display: none !important;
 }
 .hHd-Xa_collapsed .hHd-Xa_toggle::before {
@@ -478,9 +478,6 @@ div[role="menu"] > div {
   background-repeat: no-repeat !important;
   background-position: center !important;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-}
-.hHd-Xa_collapsed .hHd-Xa_toggle:hover::before {
-  display: none !important;
 }
 [data-cordis-panel] {
   position: fixed !important;

@@ -206,7 +206,7 @@ window.__ModuleLoader__.load({
       styleEl.textContent = `html { background-color: transparent !important; }
 body {
   background-image:
-    linear-gradient(180deg, rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%),
+    linear-gradient(180deg, rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%),
     url('/kimino-bg/current.jpg') !important;
   background-size: cover, cover !important;
   background-position: center, center !important;
@@ -218,7 +218,7 @@ body {
 }
 body[data-ds-dark-theme] {
   background-image:
-    linear-gradient(180deg, rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%),
+    linear-gradient(180deg, rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%),
     url('/kimino-bg/current.jpg') !important;
 }
 body::before {

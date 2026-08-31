@@ -42,12 +42,12 @@
       "light": {
         "type": "image",
         "src": "assets/wallpaper.jpg",
-        "scrim": "linear-gradient(rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%)"
+        "scrim": "linear-gradient(rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%)"
       },
       "dark": {
         "type": "image",
         "src": "assets/wallpaper.jpg",
-        "scrim": "linear-gradient(rgba(4,7,18,0.28) 0%, rgba(8,11,28,0.16) 45%, rgba(14,8,26,0.26) 100%)"
+        "scrim": "linear-gradient(rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%)"
       }
     }
   },

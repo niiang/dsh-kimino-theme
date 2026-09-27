@@ -186,27 +186,32 @@
   },
   {
     "date": "2026-09-22",
-    "downloads": 733,
+    "downloads": 763,
     "stars": 36
   },
   {
     "date": "2026-09-23",
-    "downloads": 755,
+    "downloads": 785,
     "stars": 36
   },
   {
     "date": "2026-09-24",
-    "downloads": 784,
+    "downloads": 814,
     "stars": 37
   },
   {
     "date": "2026-09-25",
-    "downloads": 784,
+    "downloads": 841,
     "stars": 38
   },
   {
     "date": "2026-09-26",
-    "downloads": 784,
+    "downloads": 841,
     "stars": 39
+  },
+  {
+    "date": "2026-09-27",
+    "downloads": 841,
+    "stars": 40
   }
 ]

@@ -53,6 +53,38 @@
   mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 40px), transparent 100%) !important;
 }
 
+/* ── 0.1.7+ layout: sink the viewport into viewArea ─────────────────
+ * The new DSH scrolls natively inside scrollBody with a sticky composer
+ * seat as its last child — masking scrollBody would clip the composer.
+ * Instead: bound scrollBody, and make the session viewArea the scroller
+ * (it sits INSIDE the session slot, a sibling of the composer seat), so
+ * the bottom fade mask never touches the composer.
+ * Guards: :not(:has(.Md3f7G_scroll)) = new layout only (the rc.6 block
+ * above handles the old one; the two are mutually exclusive);
+ * :not(:has([data-conversation-composer-overlay])) = plain mode only —
+ * in native overlay mode the composer overlays the scrollport and the
+ * native layout already keeps them separated. */
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) {
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) > [data-slot="conversation.session"] {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) .wSkVaW_viewArea {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding-bottom: 24px !important;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 40px), transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 40px), transparent 100%) !important;
+}
+
 /* ── Session stats bar: centered slim glass pill ───────────────────── */
 [data-composer-seat] .FJxK0a_root {
   width: fit-content !important;

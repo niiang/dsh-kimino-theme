@@ -291,6 +291,31 @@ body[data-ds-dark-theme] [data-chat-flow] {
   mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 40px), transparent 100%) !important;
 }
 
+/* 0.1.7+ layout: sink the viewport into viewArea so the bottom fade mask
+ * never clips the sticky composer. Guards: :not(:has(.Md3f7G_scroll)) =
+ * new layout only (rc.6 block above owns the old one, mutually exclusive);
+ * :not(:has([data-conversation-composer-overlay])) = plain mode only. */
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) {
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) > [data-slot="conversation.session"] {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) .wSkVaW_viewArea {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding-bottom: 24px !important;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 40px), transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 40px), transparent 100%) !important;
+}
+
 /* 会话统计栏：居中胶囊式轻毛玻璃。文字蓝紫，fit-content 胶囊宽度由内容
  * 决定（完整显示），暗色半透明底 + blur 把文字从壁纸中托出（解决“糊着”）；
  * 视觉克制：无阴影、细边框、小内边距。

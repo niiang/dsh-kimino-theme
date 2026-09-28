@@ -285,9 +285,12 @@ div[role="menu"] > div {
 }
 
 /* ── Unified glass scrollbars ─────────────────────────────────────── */
+/* 全局滚动条：kimino 蓝紫玻璃统一风格。不带 !important —— 原生刻意隐藏
+ * 滚动条的元素（如 0.1.7 对话轮次导航轨 eGxaPq_scroller 的 scrollbar-width:
+ * none，按指针显隐的侧栏）以类选择器优先级自然胜出，保持隐藏。 */
 * {
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(147, 197, 253, 0.42) rgba(15, 23, 42, 0.35) !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147, 197, 253, 0.42) rgba(15, 23, 42, 0.35);
 }
 *::-webkit-scrollbar {
   width: 10px !important;

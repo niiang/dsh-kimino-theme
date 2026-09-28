@@ -532,8 +532,8 @@ div[role="menu"] > div {
 }
 /* 全局滚动条：kimino 蓝紫玻璃统一风格（webkit/Electron 核心 + Firefox 标准属性兜底） */
 * {
-  scrollbar-width: thin  !important;
-  scrollbar-color: rgba(147, 197, 253, 0.42) rgba(15, 23, 42, 0.35) !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147, 197, 253, 0.42) rgba(15, 23, 42, 0.35);
 }
 *::-webkit-scrollbar {
   width: 10px !important;

@@ -261,17 +261,17 @@ body[data-ds-dark-theme] [data-chat-flow] {
  * data-conversation-scroll 属性，组件 scrollerOf() 的 closest 会先命中自身，
  * 自动跟随/位置恢复/回到底部/加载更早消息全部锚定内层滚动器。
  * hero / settling 阶段不生效，保持组件原生布局。 */
-.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody {
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:has(.Md3f7G_scroll) {
   overflow: hidden !important;
 }
-.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody > [data-slot="conversation.session"] {
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:has(.Md3f7G_scroll) > [data-slot="conversation.session"] {
   flex: 1 1 0 !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
 }
-.wSkVaW_root[data-phase="active"] .wSkVaW_viewArea {
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:has(.Md3f7G_scroll) .wSkVaW_viewArea {
   flex: 1 1 0 !important;
   min-height: 0 !important;
 }

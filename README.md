@@ -128,6 +128,8 @@ dsh web   # 重启后页面完全还原
 
 若使用 dsh-web-ui 的皮肤中心（skin-center），可改以皮肤包形式安装：把仓库 `skin/kimino/` 整个目录拷到 `~/.dsh/skins/kimino/`，刷新页面即出现在「设置 → 皮肤中心」，支持试穿 / 一键切换 / 互斥管理。
 
+**动态壁纸**：皮肤默认使用动态壁纸（`assets/wallpaper.mp4`，1080p 无声循环）。想换回静态图：编辑 `~/.dsh/skins/kimino/skin.json`，把 `backgroundMedia` 两处（light 和 dark）的 `"type": "video", "src": "assets/wallpaper.mp4"` 改为 `"type": "image", "src": "assets/wallpaper.jpg"`，保存后刷新页面即可——两份素材都在皮肤目录里，随时互切。
+
 > 说明：手工投放的皮肤因皮肤中心的溯源安全门不带 `hooks.mjs` 行为增强（占位文案、滚动优化）——壁纸、配色、Logo、玻璃样式等视觉完整；经 dsh-market 安装则功能全量。与插件安装方式二选一。
 
 ## 自定义

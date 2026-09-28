@@ -128,6 +128,8 @@ dsh web   # restart; the page fully reverts
 
 If you use the dsh-web-ui skin-center, the theme can also be installed as a skin package: copy the repository's `skin/kimino/` directory to `~/.dsh/skins/kimino/` and refresh — it appears in Settings -> Skin Center with try-on / one-click switch / mutual exclusion.
 
+**Dynamic wallpaper**: the skin ships with a live wallpaper by default (`assets/wallpaper.mp4`, 1080p silent loop). To switch back to the static image, edit `~/.dsh/skins/kimino/skin.json` and change both `backgroundMedia` entries (light and dark) from `"type": "video", "src": "assets/wallpaper.mp4"` to `"type": "image", "src": "assets/wallpaper.jpg"`, then refresh — both files live in the skin directory, so you can flip between them anytime.
+
 > Note: manually placed skins skip the `hooks.mjs` behavioral enhancements (placeholder copy, scroll polish) due to the skin-center provenance gate — visuals (wallpaper, palette, logos, glass) are complete; a dsh-market install enables everything. Pick one route at a time.
 
 ## Customizing

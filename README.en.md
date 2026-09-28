@@ -18,7 +18,7 @@
 
 <p align="center">
   <strong>A Kimi no Na wa (Your Name) theme for the DeepSeek Harness (DSH) Web GUI</strong><br>
-  <em>Comet-blue glassmorphism · cinematic wallpaper · logo swap · composer re-skin · unified scrollbars · one-command install</em>
+  <em>Live cinematic wallpaper · comet-blue glassmorphism · logo swap · composer re-skin · unified scrollbars · one-command install</em>
 </p>
 
 <div align="center">
@@ -29,13 +29,13 @@
 
 ## What it is
 
-dsh-kimino-theme turns the DSH Web GUI into Makoto Shinkai's *Your Name.*: a cinematic wallpaper behind every surface, translucent frosted-glass panels, comet-blue (`#93C5FD`) as the single interaction color, the movie logo in place of the DSH brand, a navy-glass composer card, and the placeholder copy swapped for themed lines.
+dsh-kimino-theme turns the DSH Web GUI into Makoto Shinkai's *Your Name.*: a **silent looping live wallpaper** behind every surface, translucent frosted-glass panels, comet-blue (`#93C5FD`) as the single interaction color, the movie logo in place of the DSH brand, a navy-glass composer card, and the placeholder copy swapped for themed lines.
 
 It is a standard dsh plugin package: one `dsh plugin` command installs it into a profile, it persists across DSH restarts, and it modifies no DSH source; removing it fully reverts the page.
 
 | Dimension | Native dsh web | dsh-kimino-theme |
 | --- | --- | --- |
-| Background | Solid / solid gradient | Cinematic wallpaper + global blur veil |
+| Background | Solid / solid gradient | **Live cinematic wallpaper** (1080p silent seamless-loop video) + global blur veil |
 | Surfaces | Opaque layers | Translucent frosted glass (backdrop-filter) |
 | Branding | DSH default | Movie logo (expanded + collapsed marks) |
 | Composer | Default styling | Navy glass card, themed placeholders |
@@ -56,7 +56,7 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 
 ### Wallpaper and logos
 
-- The wallpaper is served by the host half at `/kimino-bg/current.jpg` (`assets/current.jpg` inside the package), with a subtle dark gradient overlay for text legibility;
+- **Live wallpaper**: the skin ships a 1080p silent looping video by default (3.7s, 0.6s crossfaded head/tail for a perfectly seamless loop, only 0.78MB) — the light behind the glass panels slowly drifts, the desktop feels alive; the plugin form uses the static cinematic image (served at `/kimino-bg/current.jpg`, `assets/current.jpg` inside the package). Both stack a subtle dark gradient for text legibility, and you can flip between them anytime (see the static/dynamic switch under the Skin-center route);
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
 

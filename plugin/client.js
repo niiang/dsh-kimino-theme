@@ -443,7 +443,7 @@ div[role="menu"] > div {
   color: #ffffff !important;
 }
 [data-phase="hero"] .pXSMma_fish,
-[data-phase="hero"] .pXSMma_headlineText,
+[data-phase="hero"] .pXSMma_headlineText, [data-phase="hero"] .pXSMma_titleGroup,
 [data-phase="hero"] .pXSMma_previewBadge {
   display: none !important;
 }
@@ -454,8 +454,8 @@ div[role="menu"] > div {
 [data-phase="hero"] .pXSMma_headline::before {
   content: '' !important;
   display: inline-block !important;
-  width: 360px !important;
-  height: 90px !important;
+  width: min(480px, 82vw) !important;
+  aspect-ratio: 2500 / 630 !important; height: auto !important;
   background-image: url('/kimino-bg/logo-blue.svg') !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;

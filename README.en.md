@@ -27,6 +27,11 @@
 
 </div>
 
+> ### v67 update · The wallpaper is alive
+>
+> **New live cinematic wallpaper** — a 1080p silent video loops seamlessly beneath the comet-blue frosted glass; the light drifts, and the desktop finally breathes.
+> Existing users upgrade with one command: `dsh plugin --profile web update dsh-kimino-theme`. The skin form is live out of the box, with a one-line switch back to the static image.
+
 ## What it is
 
 dsh-kimino-theme turns the DSH Web GUI into Makoto Shinkai's *Your Name.*: a **silent looping live wallpaper** behind every surface, translucent frosted-glass panels, comet-blue (`#93C5FD`) as the single interaction color, the movie logo in place of the DSH brand, a navy-glass composer card, and the placeholder copy swapped for themed lines.

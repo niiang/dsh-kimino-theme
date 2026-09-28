@@ -18,18 +18,23 @@
 
 /* ── Message scroll rework + bottom gradient fade (active sessions) ──
  * Sinks the scroll viewport into the pure message container so the mask
- * never clips the composer. See hooks.mjs for the JS companions. */
-.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody {
+ * never clips the composer. See hooks.mjs for the JS companions.
+ * VERSION TOLERANCE: the layout-locking rules are guarded with
+ * :has(.Md3f7G_scroll) — the rc.6-era message scroller. On DSH builds where
+ * that hash class no longer exists (0.1.7+ scrolls natively inside
+ * scrollBody), the guards fail to match, these rules self-retire, and native
+ * scrolling stays fully functional. See issue #5. */
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:has(.Md3f7G_scroll) {
   overflow: hidden !important;
 }
-.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody > [data-slot="conversation.session"] {
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:has(.Md3f7G_scroll) > [data-slot="conversation.session"] {
   flex: 1 1 0 !important;
   min-height: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
 }
-.wSkVaW_root[data-phase="active"] .wSkVaW_viewArea {
+.wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:has(.Md3f7G_scroll) .wSkVaW_viewArea {
   flex: 1 1 0 !important;
   min-height: 0 !important;
 }

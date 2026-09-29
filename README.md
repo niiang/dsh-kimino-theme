@@ -31,6 +31,8 @@
 >
 > **全新动态电影壁纸**——1080p 无声视频无缝循环，垫在彗星蓝玻璃面板之下，光影缓缓流动，桌面第一次动了起来。
 > 已装用户一条命令升级：`dsh plugin --profile web update dsh-kimino-theme`；皮肤形态开箱即动，静态图随时一键切回。
+>
+> <p align="center"><img src="docs/screenshots/live-wallpaper.gif" alt="动态壁纸实拍：玻璃面板下的无缝循环电影画面" width="760"></p>
 
 ## 是什么
 

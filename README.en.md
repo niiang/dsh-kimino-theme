@@ -31,6 +31,8 @@
 >
 > **New live cinematic wallpaper** — a 1080p silent video loops seamlessly beneath the comet-blue frosted glass; the light drifts, and the desktop finally breathes.
 > Existing users upgrade with one command: `dsh plugin --profile web update dsh-kimino-theme`. The skin form is live out of the box, with a one-line switch back to the static image.
+>
+> <p align="center"><img src="docs/screenshots/live-wallpaper.gif" alt="Live wallpaper demo: seamless cinematic loop beneath the frosted glass" width="760"></p>
 
 ## What it is
 

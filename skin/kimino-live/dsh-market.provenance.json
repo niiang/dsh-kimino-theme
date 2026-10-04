@@ -1,9 +1,9 @@
 {
   "version": 1,
   "source": "https://dsh-market.com",
-  "id": "kimino",
+  "id": "kimino-live",
   "files": {
-    "skin.json": "9a386130775ca36c48e5f0626b86f3c909a61e9160af076580250a5675dec00b",
+    "skin.json": "03ec1de67e6022d34485ae7e8d1cdd262408146cafbdd2102373f5742b2013e5",
     "hooks.mjs": "fb803b9fa2343217681a919d6310a18b862c29b34bc29f907887d04e11d2ac90"
   }
 }

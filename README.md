@@ -27,10 +27,11 @@
 
 </div>
 
-> ### v67 大更新 · 壁纸活了
+> ### v68 大更新 · 双版本各取所需 + 十项质感进化
 >
-> **全新动态电影壁纸**——1080p 无声视频无缝循环，垫在彗星蓝玻璃面板之下，光影缓缓流动，桌面第一次动了起来。
-> 已装用户一条命令升级：`dsh plugin --profile web update dsh-kimino-theme`；皮肤形态开箱即动，静态图随时一键切回。
+> 皮肤形态现在有**两张卡片**：**kimino**（静态电影壁纸，纯净省电）与 **kimino-live**（1080p 无声无缝循环视频壁纸）——同装同列，试穿互切，喜欢哪个用哪个。
+> 同时带来十项 UI 质感升级：首页彗星流星、思考块彗星蓝化、回到底部玻璃圆钮、玻璃边缘高光、输入卡聚焦光环、用户/助手气泡区分色、选区着色、统一过渡动画、0.1.7 布局适配与弱 GPU 自动降级。
+> 已装用户一条命令升级：`dsh plugin --profile web update dsh-kimino-theme`。
 >
 > <p align="center"><img src="docs/screenshots/live-wallpaper.gif" alt="动态壁纸实拍：玻璃面板下的无缝循环电影画面" width="760"></p>
 
@@ -63,7 +64,7 @@ dsh-kimino-theme 把 DSH Web GUI 变成新海诚《你的名字。》的模样�
 
 ### 壁纸与 Logo
 
-- **动态壁纸**：皮肤形态默认使用一段 1080p 无声循环视频（3.7 秒，首尾 0.6 秒交叉淡化处理、循环点完全无缝，仅 0.78MB）——玻璃面板下的光影缓缓流动，桌面像活了起来；插件形态为静态电影壁纸（`/kimino-bg/current.jpg` 路由，包内 `assets/current.jpg`），两种形态均叠加轻微深色渐变保证文字可读性，且可随时互换（见「皮肤中心方式」的静态/动态切换说明）；
+- **双版本壁纸**：皮肤形态提供 `kimino`（静态电影壁纸）与 `kimino-live`（1080p 无声无缝循环视频，首尾 0.6 秒交叉淡化处理，仅 0.78MB）两个版本——玻璃面板下的光影缓缓流动或纯净静态，各取所需（见「皮肤中心方式」）；插件形态为静态电影壁纸（`/kimino-bg/current.jpg` 路由，包内 `assets/current.jpg`），两种形态均叠加轻微深色渐变保证文字可读性；
 - 侧边栏展开态显示横向电影 Logo，折叠态显示字母标记（两个 SVG，同样由插件路由提供）；
 - 首页（hero）标题替换为居中大尺寸 Logo。
 
@@ -133,9 +134,19 @@ dsh web   # 重启后页面完全还原
 
 ### 皮肤中心方式（可选）
 
-若使用 dsh-web-ui 的皮肤中心（skin-center），可改以皮肤包形式安装：把仓库 `skin/kimino/` 整个目录拷到 `~/.dsh/skins/kimino/`，刷新页面即出现在「设置 → 皮肤中心」，支持试穿 / 一键切换 / 互斥管理。
+若使用 dsh-web-ui 的皮肤中心（skin-center），可改以皮肤包形式安装，**两个版本各取所需**：
 
-**动态壁纸**：皮肤默认使用动态壁纸（`assets/wallpaper.mp4`，1080p 无声循环）。想换回静态图：编辑 `~/.dsh/skins/kimino/skin.json`，把 `backgroundMedia` 两处（light 和 dark）的 `"type": "video", "src": "assets/wallpaper.mp4"` 改为 `"type": "image", "src": "assets/wallpaper.jpg"`，保存后刷新页面即可——两份素材都在皮肤目录里，随时互切。
+```sh
+git clone https://github.com/niiang/dsh-kimino-theme /tmp/kimino-theme
+
+# 静态版（纯净省电）：电影壁纸静态图
+cp -r /tmp/kimino-theme/skin/kimino ~/.dsh/skins/kimino
+
+# 动态版（氛围拉满）：1080p 无声无缝循环视频壁纸
+cp -r /tmp/kimino-theme/skin/kimino-live ~/.dsh/skins/kimino-live
+```
+
+刷新页面后，「设置 → 皮肤中心」出现对应卡片（动态版预览直接会动），支持试穿 / 一键切换 / 互斥管理。两版可同装，随时互切；只装一版也完全独立。
 
 > 说明：手工投放的皮肤因皮肤中心的溯源安全门不带 `hooks.mjs` 行为增强（占位文案、滚动优化）——壁纸、配色、Logo、玻璃样式等视觉完整；经 dsh-market 安装则功能全量。与插件安装方式二选一。
 
@@ -171,7 +182,10 @@ bundle/client.js     # 插件浏览器半区：token 覆盖 + 组件样式 + DOM
 cordis.patch.yml     # 插件行清单：dsh plugin add 挂载的入口
 assets/              # 壁纸与 Logo
 plugin/              # 会话内动态注入用的同源闭包源码（高级用法，一般无需关心）
-skin/kimino/         # 皮肤中心（skin-center）皮肤包：skin.json v2 + skin.css + patches.css + hooks.mjs
+skin/shared/         # 皮肤单一事实源：skin.css + patches.css + hooks.mjs + Logo + 预览
+skin/kimino/         # 皮肤中心·静态版：skin.json v2（image 壁纸）+ 从 shared 物化
+skin/kimino-live/    # 皮肤中心·动态版：skin.json v2（video 壁纸）+ GIF 预览 + 从 shared 物化
+scripts/build-skins.mjs # 改 shared 后跑一次，两版同步物化 + 校验
 ```
 
 所有副作用（token 层、样式标签、事件监听、DOM 属性、路由）都注册在插件 fiber 上，禁用/卸载即完全还原。

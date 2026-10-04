@@ -1,0 +1,89 @@
+/* kimino skin — L1 token remap + L2 semantic styles.
+ * Comet-blue glass over a cinematic wallpaper, one visual across light/dark.
+ * Scoped under html[data-dsh-skin="kimino"] by the skin-center loader. */
+
+:root {
+  color: #F8FAFC;
+  color-scheme: dark;
+}
+
+:root, body[data-ds-dark-theme] {
+  --dsw-alias-bg-base: rgba(5, 8, 20, 0);
+  --dsw-alias-bg-layer-1: rgba(15, 23, 42, 0.75);
+  --dsw-alias-bg-layer-2: rgba(15, 23, 42, 0.8);
+  --dsw-alias-bg-layer-3: rgba(15, 23, 42, 0.85);
+  --dsw-alias-bg-overlay: rgba(10, 14, 26, 0.9);
+  --dsw-alias-bg-module-platform: rgba(255, 255, 255, 0.08);
+  --dsw-alias-bg-multi-select: rgba(147, 197, 253, 0.15);
+  --dsw-alias-border-l1: rgba(147, 197, 253, 0.14);
+  --dsw-alias-border-l2: rgba(147, 197, 253, 0.22);
+  --dsw-alias-border-l3: rgba(147, 197, 253, 0.28);
+  --dsw-alias-border-l2-darkmode-thin: rgba(147, 197, 253, 0.16);
+  --dsw-alias-brand-primary: #93C5FD;
+  --dsw-alias-brand-primary-invert: #0f172a;
+  --dsw-alias-brand-text: #e2e8f0;
+  --dsw-alias-button-contrast-fill: #0f172a;
+  --dsw-alias-button-elevated-fill: rgba(255, 255, 255, 0.08);
+  --dsw-alias-button-floating-fill: rgba(255, 255, 255, 0.1);
+  --dsw-alias-button-floating-hover: rgba(255, 255, 255, 0.15);
+  --dsw-alias-button-ghost-active-border: rgba(147, 197, 253, 0.5);
+  --dsw-alias-button-ghost-active-fill: rgba(147, 197, 253, 0.16);
+  --dsw-alias-button-ghost-active-hover: rgba(147, 197, 253, 0.22);
+  --dsw-alias-button-info-fill: #93C5FD;
+  --dsw-alias-button-info-hover: #7CAEFD;
+  --dsw-alias-button-primary-dimmed: rgba(147, 197, 253, 0.18);
+  --dsw-alias-button-primary-fill: #93C5FD;
+  --dsw-alias-button-primary-hover: #7CAEFD;
+  --dsw-alias-button-tool-bar-fill: rgba(255, 255, 255, 0.1);
+  --dsw-alias-button-tool-bar-fill-invisible: rgba(255, 255, 255, 0.1);
+  --dsw-alias-button-tool-bar-hover: rgba(255, 255, 255, 0.15);
+  --dsw-alias-interactive-bg-active: rgba(147, 197, 253, 0.16);
+  --dsw-alias-interactive-bg-hover: rgba(255, 255, 255, 0.08);
+  --dsw-alias-interactive-bg-hover-accent: rgba(147, 197, 253, 0.2);
+  --dsw-alias-interactive-bg-hover-danger: rgba(248, 113, 113, 0.12);
+  --dsw-alias-interactive-bg-hover-solid: rgba(255, 255, 255, 0.1);
+  --dsw-alias-label-caption: #94A3B8;
+  --dsw-alias-label-dimmed: #64748B;
+  --dsw-alias-label-primary: #F8FAFC;
+  --dsw-alias-label-primary-dimmed: #A5B4FC;
+  --dsw-alias-label-primary-foreground: #0f172a;
+  --dsw-alias-label-primary-inverted: #0f172a;
+  --dsw-alias-label-secondary: #CBD5E1;
+  --dsw-alias-label-tertiary: #93C5FD;
+  --dsw-alias-markdown-citation: rgba(147, 197, 253, 0.1);
+  --dsw-alias-markdown-code-block: rgba(13, 17, 23, 0.55);
+  --dsw-alias-markdown-code-block-banner: rgba(147, 197, 253, 0.08);
+  --dsw-alias-markdown-code-segment-selected: rgba(147, 197, 253, 0.2);
+  --dsw-alias-markdown-code-segment-unselected: rgba(255, 255, 255, 0.06);
+  --dsw-alias-markdown-inline-code: rgba(147, 197, 253, 0.12);
+  --dsw-alias-markdown-placeholder: rgba(255, 255, 255, 0.05);
+  --dsw-alias-markdown-tag: rgba(147, 197, 253, 0.1);
+  --dsw-alias-scrollbar-bg-l1: rgba(15, 23, 42, 0.35);
+  --dsw-alias-scrollbar-bg-l2: rgba(147, 197, 253, 0.32);
+  --dsw-alias-scrollbar-hover-l1: rgba(147, 197, 253, 0.42);
+  --dsw-alias-scrollbar-hover-l2: rgba(147, 197, 253, 0.55);
+  --dsw-alias-state-business-primary: #93C5FD;
+  --dsw-alias-state-business-tertiary: rgba(147, 197, 253, 0.14);
+  --dsw-alias-state-error-primary: #F87171;
+  --dsw-alias-state-error-secondary: #FCA5A5;
+  --dsw-alias-state-error-tertiary: rgba(248, 113, 113, 0.14);
+  --dsw-alias-state-success-primary: #7FE0C8;
+  --dsw-alias-state-success-tertiary: rgba(127, 224, 200, 0.14);
+  --dsw-alias-state-warn-primary: #FBBF24;
+  --dsw-alias-state-warn-secondary: #FCD34D;
+  --dsw-alias-state-warn-tertiary: rgba(251, 191, 36, 0.14);
+  --dsw-alias-tooltip-bg: rgba(37, 58, 125, 0.94);
+  --dsw-shadow-lv2: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --dsw-specific-bubble: rgba(15, 23, 42, 0.75);
+  --dsw-specific-input-major: rgba(15, 23, 42, 0.85);
+  --dsw-specific-menu: rgba(37, 58, 125, 0.94);
+  --dsw-specific-selector: rgba(255, 255, 255, 0.1);
+  --dsw-specific-sidebar-fill: rgba(15, 23, 42, 0.42);
+  --dsw-specific-sidebar-nav-item-active: rgba(147, 197, 253, 0.16);
+  --dsw-specific-sidebar-nav-item-active-accent: rgba(147, 197, 253, 0.85);
+  --dsw-specific-sidebar-nav-item-hover: rgba(255, 255, 255, 0.08);
+  --dsw-specific-tip: rgba(13, 17, 23, 0.75);
+}
+
+/* L1 backs the glass surfaces; translucency keeps the wallpaper readable
+ * through layer tokens above. Sidebar intentionally more transparent. */

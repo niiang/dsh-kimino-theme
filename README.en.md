@@ -27,10 +27,11 @@
 
 </div>
 
-> ### v67 update · The wallpaper is alive
+> ### v68 update · Two variants, your pick + ten polish upgrades
 >
-> **New live cinematic wallpaper** — a 1080p silent video loops seamlessly beneath the comet-blue frosted glass; the light drifts, and the desktop finally breathes.
-> Existing users upgrade with one command: `dsh plugin --profile web update dsh-kimino-theme`. The skin form is live out of the box, with a one-line switch back to the static image.
+> The skin form now ships as **two cards**: **kimino** (static cinematic wallpaper — clean and power-friendly) and **kimino-live** (1080p silent seamless-loop video wallpaper). Install either or both, try them on, switch anytime.
+> Plus ten UI polish upgrades: hero comet streaks, comet-blue think rows, glass scroll-to-bottom button, glass edge highlights, composer focus ring, user/assistant bubble tinting, selection color, unified hover transitions, 0.1.7 layout adaptation and automatic weak-GPU degradation.
+> Existing users upgrade with one command: `dsh plugin --profile web update dsh-kimino-theme`.
 >
 > <p align="center"><img src="docs/screenshots/live-wallpaper.gif" alt="Live wallpaper demo: seamless cinematic loop beneath the frosted glass" width="760"></p>
 
@@ -63,7 +64,7 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 
 ### Wallpaper and logos
 
-- **Live wallpaper**: the skin ships a 1080p silent looping video by default (3.7s, 0.6s crossfaded head/tail for a perfectly seamless loop, only 0.78MB) — the light behind the glass panels slowly drifts, the desktop feels alive; the plugin form uses the static cinematic image (served at `/kimino-bg/current.jpg`, `assets/current.jpg` inside the package). Both stack a subtle dark gradient for text legibility, and you can flip between them anytime (see the static/dynamic switch under the Skin-center route);
+- **Two wallpaper variants**: the skin form ships `kimino` (static cinematic still) and `kimino-live` (1080p silent seamless-loop video, 0.6s crossfaded head/tail, only 0.78MB) — clean stillness or drifting light behind the glass, your pick (see the Skin-center route); the plugin form uses the static cinematic image (served at `/kimino-bg/current.jpg`, `assets/current.jpg` inside the package). All variants stack a subtle dark gradient for text legibility;
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
 
@@ -133,9 +134,19 @@ dsh web   # restart; the page fully reverts
 
 ### Skin-center route (optional)
 
-If you use the dsh-web-ui skin-center, the theme can also be installed as a skin package: copy the repository's `skin/kimino/` directory to `~/.dsh/skins/kimino/` and refresh — it appears in Settings -> Skin Center with try-on / one-click switch / mutual exclusion.
+If you use the dsh-web-ui skin-center, the theme can also be installed as a skin package — **two variants, your pick**:
 
-**Dynamic wallpaper**: the skin ships with a live wallpaper by default (`assets/wallpaper.mp4`, 1080p silent loop). To switch back to the static image, edit `~/.dsh/skins/kimino/skin.json` and change both `backgroundMedia` entries (light and dark) from `"type": "video", "src": "assets/wallpaper.mp4"` to `"type": "image", "src": "assets/wallpaper.jpg"`, then refresh — both files live in the skin directory, so you can flip between them anytime.
+```sh
+git clone https://github.com/niiang/dsh-kimino-theme /tmp/kimino-theme
+
+# Static (clean, power-friendly): the cinematic still image
+cp -r /tmp/kimino-theme/skin/kimino ~/.dsh/skins/kimino
+
+# Live (full atmosphere): 1080p silent seamless-loop video wallpaper
+cp -r /tmp/kimino-theme/skin/kimino-live ~/.dsh/skins/kimino-live
+```
+
+After a refresh the cards appear in Settings -> Skin Center (the live card's preview animates right in the list), with try-on / one-click switch / mutual exclusion. Install both and flip between them anytime, or just one — each is fully independent.
 
 > Note: manually placed skins skip the `hooks.mjs` behavioral enhancements (placeholder copy, scroll polish) due to the skin-center provenance gate — visuals (wallpaper, palette, logos, glass) are complete; a dsh-market install enables everything. Pick one route at a time.
 
@@ -171,7 +182,10 @@ bundle/client.js     # plugin browser half: token overrides + component styles +
 cordis.patch.yml     # plugin row manifest: the entry dsh plugin add mounts
 assets/              # wallpaper and logos
 plugin/              # same-source closure code for in-session dynamic injection (advanced; normally not needed)
-skin/kimino/         # skin-center package: skin.json v2 + skin.css + patches.css + hooks.mjs
+skin/shared/         # single source of truth: skin.css + patches.css + hooks.mjs + logos + previews
+skin/kimino/         # skin-center static variant: skin.json v2 (image background), materialized from shared/
+skin/kimino-live/    # skin-center live variant: skin.json v2 (video background) + GIF preview, from shared/
+scripts/build-skins.mjs # run once after changing shared/ — syncs + validates both variants
 ```
 
 Every side effect (token layer, style tag, event listeners, DOM attributes, routes) is registered on the plugin fiber; disable/remove fully reclaims them.

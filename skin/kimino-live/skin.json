@@ -1,13 +1,13 @@
 {
   "$schema": "https://schemas.linxin666.org/dsh-skin/v2.json",
   "skinManifestVersion": 2,
-  "id": "kimino",
-  "name": "君の名は",
-  "nameEn": "Kimi no Na wa",
+  "id": "kimino-live",
+  "name": "君の名は·动",
+  "nameEn": "Kimi no Na wa Live",
   "version": "1.1.0",
   "author": "niiang",
-  "tagline": "彗星蓝玻璃拟态 · 静态电影壁纸 · 黄昏之时",
-  "description": "《你的名字。》静态版主题皮肤：电影壁纸垫底，全局彗星蓝（#93C5FD）毛玻璃拟态，深空蓝半透明表面与低饱和蓝描边；侧边栏与首页替换为电影 Logo，输入卡为藏蓝玻璃胶囊，占位文案换成「黄昏之时，我在这里等你。」。静态壁纸零视频开销，适合偏好纯净与省电的场景；动态版见 kimino-live。",
+  "tagline": "彗星蓝玻璃拟态 · 动态电影壁纸 · 无缝循环",
+  "description": "《你的名字。》动态版主题皮肤：一段 1080p 无声无缝循环的电影视频垫在彗星蓝毛玻璃之下，光影缓缓流动；其余视觉与行为（电影 Logo、藏蓝玻璃输入卡、占位文案「黄昏之时，我在这里等你。」、彗星流星等）与静态版完全一致。视频仅 0.78MB，开销可控；偏好纯净省电请用静态版 kimino。",
   "tags": [
     "kimino",
     "your-name",
@@ -15,16 +15,17 @@
     "comet-blue",
     "glassmorphism",
     "anime",
-    "static"
+    "live-wallpaper",
+    "video"
   ],
   "accent": "#93C5FD",
-  "order": 60,
+  "order": 61,
   "license": "MIT (code) — artwork © CoMix Wave Films / Toho, personal desktop use only",
   "sourceUrl": "https://github.com/niiang/dsh-kimino-theme",
-  "attribution": "Wallpaper and logo assets derive from promotional material of the film Kimi no Na wa (2016); copyright belongs to CoMix Wave Films, Toho and other rights holders.",
+  "attribution": "Video and logo assets derive from promotional material of the film Kimi no Na wa (2016); copyright belongs to CoMix Wave Films, Toho and other rights holders.",
   "preview": {
-    "light": "preview/light.png",
-    "dark": "preview/dark.png"
+    "light": "preview/live.gif",
+    "dark": "preview/live.gif"
   },
   "requires": {
     "contracts": [
@@ -40,13 +41,13 @@
     "patches": "patches.css",
     "backgroundMedia": {
       "light": {
-        "type": "image",
-        "src": "assets/wallpaper.jpg",
+        "type": "video",
+        "src": "assets/wallpaper.mp4",
         "scrim": "linear-gradient(rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%)"
       },
       "dark": {
-        "type": "image",
-        "src": "assets/wallpaper.jpg",
+        "type": "video",
+        "src": "assets/wallpaper.mp4",
         "scrim": "linear-gradient(rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%)"
       }
     }

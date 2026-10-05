@@ -26,7 +26,14 @@ if (!hooksEntry) {
   console.error('skin.json declares no facets.client.entry — nothing to pin');
   process.exit(1);
 }
-const sha256 = (rel) => createHash('sha256').update(readFileSync(join(skinDir, ...rel.split('/')))).digest('hex');
+const safeJoin = (base, rel) => {
+  const target = resolve(base, ...rel.split('/'));
+  if (target !== base && !target.startsWith(base + '/')) {
+    throw new Error(`refusing to read path outside skin directory: ${rel}`);
+  }
+  return target;
+};
+const sha256 = (rel) => createHash('sha256').update(readFileSync(safeJoin(skinDir, rel))).digest('hex');
 const record = {
   version: 1,
   source: 'https://dsh-market.com',

@@ -21,27 +21,42 @@ window.__ModuleLoader__.load({
           'Message the agent': '黄昏之时，我在这里等你。',
           '描述你想要构建的内容': '君の名は。想构建怎样的世界？',
           'Describe what you want to build': '君の名は。想构建怎样的世界？',
+          // DSH 0.1.7+ generation
+          '发消息或创建任务, / 调用指令, @ 文件或对话': '黄昏之时，我在这里等你。',
+          'Message or run a task, / commands, @ files or sessions': '黄昏の時、私はここにいるよ。',
+          '描述你想要构建的内容, / 调用指令, @ 文件或对话': '君の名は。想构建怎样的世界？',
+          'Describe what you want to build, / commands, @ files or sessions': '君の名は。どんな世界を構築する？',
         };
         const walk = () => {
-          document.querySelectorAll('textarea').forEach((ta) => {
-            const current = ta.placeholder;
-            if (current && replacements[current] !== undefined && ta.placeholder !== replacements[current]) {
-              ta.placeholder = replacements[current];
+        document.querySelectorAll('textarea, [data-placeholder], [data-composer-placeholder]').forEach((el) => {
+          // The visible composer placeholder is a div whose TEXT CONTENT is the
+          // string (0.1.7 DraftEditor); textarea/data-placeholder forms use attrs.
+          if (el.hasAttribute('data-composer-placeholder')) {
+            const text = el.textContent;
+            if (text && replacements[text] !== undefined && el.textContent !== replacements[text]) {
+              el.textContent = replacements[text];
             }
-          });
-        };
+            return;
+          }
+          const attr = el.hasAttribute('data-placeholder') ? 'data-placeholder' : 'placeholder';
+          const current = el.getAttribute(attr);
+          if (current && replacements[current] !== undefined && el.getAttribute(attr) !== replacements[current]) {
+            el.setAttribute(attr, replacements[current]);
+          }
+        });
+      };
         walk();
         const observer = new MutationObserver(walk);
-        observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['placeholder'] });
+        observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['placeholder', 'data-placeholder'] });
         return () => observer.disconnect();
       };
       const disposePlaceholders = patchPlaceholders();
       const pair = (v) => ({ light: v, dark: v });
       const dispose = ctx.theme.overrideTokens('kimino-bg', {
         '--dsw-alias-bg-base': pair('rgba(5,8,20,0)'),
-        '--dsw-alias-bg-layer-1': pair('rgba(15,23,42,0.75)'),
-        '--dsw-alias-bg-layer-2': pair('rgba(15,23,42,0.8)'),
-        '--dsw-alias-bg-layer-3': pair('rgba(15,23,42,0.85)'),
+        '--dsw-alias-bg-layer-1': pair('rgba(15,23,42,0.88)'),
+        '--dsw-alias-bg-layer-2': pair('rgba(15,23,42,0.9)'),
+        '--dsw-alias-bg-layer-3': pair('rgba(15,23,42,0.92)'),
         '--dsw-alias-bg-overlay': pair('rgba(10,14,26,0.9)'),
         '--dsw-alias-bg-module-platform': pair('rgba(255,255,255,0.08)'),
         '--dsw-alias-bg-multi-select': pair('rgba(147,197,253,0.15)'),
@@ -79,7 +94,7 @@ window.__ModuleLoader__.load({
         '--dsw-alias-markdown-citation': pair('rgba(147,197,253,0.1)'),
         '--dsw-alias-markdown-code-segment-unselected': pair('rgba(255,255,255,0.06)'),
         '--dsw-alias-markdown-code-segment-selected': pair('rgba(147,197,253,0.2)'),
-        '--dsw-alias-markdown-placeholder': pair('rgba(255,255,255,0.05)'),
+        '--dsw-alias-markdown-placeholder': pair('rgba(255,255,255,0.5)'),
         '--dsw-alias-state-error-primary': pair('#F87171'),
         '--dsw-alias-state-error-secondary': pair('#FCA5A5'),
         '--dsw-alias-state-error-tertiary': pair('rgba(248,113,113,0.14)'),
@@ -556,7 +571,21 @@ div[role="menu"] > div {
 }
 *::-webkit-scrollbar-corner {
   background: transparent !important;
-}`;
+}
+/* File viewer (CodeMirror 6): dark glass base so code/text stays readable. */
+.cm-editor {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border-radius: 12px !important;
+}
+.cm-scroller {
+  background: transparent !important;
+}
+.cm-gutters {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border-right: 1px solid rgba(147, 197, 253, 0.18) !important;
+  color: rgba(148, 163, 184, 0.85) !important;
+}
+`;
       document.head.append(styleEl);
       ctx.effect(() => () => styleEl.remove());
     };

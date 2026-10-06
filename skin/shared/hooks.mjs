@@ -23,19 +23,34 @@ export default function defineSkinHooks() {
         '给智能体发消息': '黄昏之时，我在这里等你。',
         'Message the agent': '黄昏の時、私はここにいるよ。',
         '描述你想要构建的内容': '君の名は。想构建怎样的世界？',
-        'Describe what you want to build': '君の名は。どんな世界を構築する？',
+        'Describe what you want to build': '君の名は。どんな世界を構築する？',
+        // DSH 0.1.7+ generation
+        '发消息或创建任务, / 调用指令, @ 文件或对话': '黄昏之时，我在这里等你。',
+        'Message or run a task, / commands, @ files or sessions': '黄昏の時、私はここにいるよ。',
+        '描述你想要构建的内容, / 调用指令, @ 文件或对话': '君の名は。想构建怎样的世界？',
+        'Describe what you want to build, / commands, @ files or sessions': '君の名は。どんな世界を構築する？',
       };
       const walk = () => {
-        document.querySelectorAll('textarea').forEach((ta) => {
-          const cur = ta.placeholder;
-          if (cur && replacements[cur] !== undefined && ta.placeholder !== replacements[cur]) {
-            ta.placeholder = replacements[cur];
+        document.querySelectorAll('textarea, [data-placeholder], [data-composer-placeholder]').forEach((el) => {
+          // The visible composer placeholder is a div whose TEXT CONTENT is the
+          // string (0.1.7 DraftEditor); textarea/data-placeholder forms use attrs.
+          if (el.hasAttribute('data-composer-placeholder')) {
+            const text = el.textContent;
+            if (text && replacements[text] !== undefined && el.textContent !== replacements[text]) {
+              el.textContent = replacements[text];
+            }
+            return;
+          }
+          const attr = el.hasAttribute('data-placeholder') ? 'data-placeholder' : 'placeholder';
+          const current = el.getAttribute(attr);
+          if (current && replacements[current] !== undefined && el.getAttribute(attr) !== replacements[current]) {
+            el.setAttribute(attr, replacements[current]);
           }
         });
       };
       walk();
       const placeholderObserver = new MutationObserver(walk);
-      placeholderObserver.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['placeholder'] });
+      placeholderObserver.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['placeholder', 'data-placeholder'] });
       onCleanup(() => placeholderObserver.disconnect());
 
       // 2) Chat scroll companions for the L3 viewport rework: mark the pure

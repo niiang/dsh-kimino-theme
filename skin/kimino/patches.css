@@ -478,3 +478,18 @@ button, [role="menuitem"], .hHd-Xa_iconButton, .hHd-Xa_trigger {
     -webkit-backdrop-filter: none !important;
   }
 }
+
+/* ── File viewer (CodeMirror 6): dark glass base so code/text stays
+ * readable over the wallpaper — scoped to the editor surface only. */
+.cm-editor {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border-radius: 12px !important;
+}
+.cm-scroller {
+  background: transparent !important;
+}
+.cm-gutters {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border-right: 1px solid rgba(147, 197, 253, 0.18) !important;
+  color: rgba(148, 163, 184, 0.85) !important;
+}

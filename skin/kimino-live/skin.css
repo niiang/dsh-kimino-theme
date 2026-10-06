@@ -9,9 +9,9 @@
 
 :root, body[data-ds-dark-theme] {
   --dsw-alias-bg-base: rgba(5, 8, 20, 0);
-  --dsw-alias-bg-layer-1: rgba(15, 23, 42, 0.75);
-  --dsw-alias-bg-layer-2: rgba(15, 23, 42, 0.8);
-  --dsw-alias-bg-layer-3: rgba(15, 23, 42, 0.85);
+  --dsw-alias-bg-layer-1: rgba(15, 23, 42, 0.88);
+  --dsw-alias-bg-layer-2: rgba(15, 23, 42, 0.9);
+  --dsw-alias-bg-layer-3: rgba(15, 23, 42, 0.92);
   --dsw-alias-bg-overlay: rgba(10, 14, 26, 0.9);
   --dsw-alias-bg-module-platform: rgba(255, 255, 255, 0.08);
   --dsw-alias-bg-multi-select: rgba(147, 197, 253, 0.15);
@@ -56,7 +56,7 @@
   --dsw-alias-markdown-code-segment-selected: rgba(147, 197, 253, 0.2);
   --dsw-alias-markdown-code-segment-unselected: rgba(255, 255, 255, 0.06);
   --dsw-alias-markdown-inline-code: rgba(147, 197, 253, 0.12);
-  --dsw-alias-markdown-placeholder: rgba(255, 255, 255, 0.05);
+  --dsw-alias-markdown-placeholder: rgba(255, 255, 255, 0.5);
   --dsw-alias-markdown-tag: rgba(147, 197, 253, 0.1);
   --dsw-alias-scrollbar-bg-l1: rgba(15, 23, 42, 0.35);
   --dsw-alias-scrollbar-bg-l2: rgba(147, 197, 253, 0.32);

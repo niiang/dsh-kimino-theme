@@ -27,8 +27,12 @@ if (!hooksEntry) {
   process.exit(1);
 }
 const safeJoin = (base, rel) => {
-  const target = resolve(base, ...rel.split('/'));
-  if (target !== base && !target.startsWith(base + '/')) {
+  // Windows resolve() yields backslash separators — normalize before the
+  // containment check, otherwise every path "escapes" on win32.
+  const norm = (p) => resolve(p).split('\\').join('/');
+  const b = norm(base);
+  const target = norm(resolve(base, ...rel.split('/')));
+  if (target !== b && !target.startsWith(b + '/')) {
     throw new Error(`refusing to read path outside skin directory: ${rel}`);
   }
   return target;

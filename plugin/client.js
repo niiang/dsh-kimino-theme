@@ -115,7 +115,7 @@ return {
       '--dsw-specific-input-major': pair('rgba(15,23,42,0.85)'),
       '--dsw-specific-bubble': pair('rgba(15,23,42,0.75)'),
       '--dsw-specific-tip': pair('rgba(13,17,23,0.75)'),
-      '--dsw-specific-menu': pair('rgba(37,58,125,0.94)'),
+      '--dsw-specific-menu': pair('rgba(15,23,42,0.94)'),
       '--dsw-specific-selector': pair('rgba(255,255,255,0.1)'),
       '--dsw-alias-scrollbar-bg-l2': pair('rgba(147,197,253,0.32)'),
       '--dsw-alias-scrollbar-hover-l2': pair('rgba(147,197,253,0.55)'),
@@ -433,8 +433,8 @@ div[role="menu"],
 div[role="dialog"][class*="popover"],
 div[class*="popover"],
 div[class*="dropdown-menu"] {
-  background: rgba(37, 58, 125, 0.94) !important;
-  background-color: rgba(37, 58, 125, 0.94) !important;
+  background: rgba(15, 23, 42, 0.94) !important;
+  background-color: rgba(15, 23, 42, 0.94) !important;
   backdrop-filter: blur(16px) saturate(130%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(130%) !important;
   border: 1px solid rgba(147, 197, 253, 0.35) !important;
@@ -575,12 +575,30 @@ div[role="menu"] > div {
 }
 /* ── File viewer (CodeMirror 6): dark glass base so code/text stays
  * readable over the wallpaper — scoped to the editor surface only. */
+
+/* ── Menu item icons: brighten (dark glyphs vanish on dark glass) ── */
+[role="menuitem"] svg,
+[role="menuitem"] svg * {
+  color: #BFDBFE !important;
+  fill: #BFDBFE !important;
+}
 .cm-editor {
   background: rgba(15, 23, 42, 0.88) !important;
   border-radius: 12px !important;
 }
 .cm-scroller {
   background: transparent !important;
+}
+
+/* Main-area pages (plugins / schedule / settings ...): dark glass base.
+ * Only when the conversation view is NOT mounted. */
+.pI_x6G_centerCol:not(:has(.wSkVaW_root)) {
+  background: rgba(10, 16, 30, 0.86) !important;
+}
+/* Schedule panel: same glass, belt-and-braces. */
+.ovHEHG_panel {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-radius: 14px !important;
 }
 
 /* ── Right workspace panel (files tree / search): opaque dark glass so

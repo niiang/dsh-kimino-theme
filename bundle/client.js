@@ -573,6 +573,13 @@ div[role="menu"] > div {
   background: transparent !important;
 }
 /* File viewer (CodeMirror 6): dark glass base so code/text stays readable. */
+
+/* ── Menu item icons: brighten (dark glyphs vanish on dark glass) ── */
+[role="menuitem"] svg,
+[role="menuitem"] svg * {
+  color: #BFDBFE !important;
+  fill: #BFDBFE !important;
+}
 .cm-editor {
   background: rgba(15, 23, 42, 0.88) !important;
   border-radius: 12px !important;
@@ -603,6 +610,19 @@ div[role="menu"] > div {
   background: rgba(15, 23, 42, 0.6) !important;
   border-right: 1px solid rgba(147, 197, 253, 0.18) !important;
   color: rgba(148, 163, 184, 0.85) !important;
+}
+
+
+/* ── Main-area pages (plugins / schedule / settings …): dark glass base.
+ * Only when the conversation view is NOT mounted — the chat screen keeps
+ * its bright wallpaper. One rule covers every non-conversation page. ── */
+.pI_x6G_centerCol:not(:has(.wSkVaW_root)) {
+  background: rgba(10, 16, 30, 0.86) !important;
+}
+/* Schedule (自动化任务) panel: same glass, belt-and-braces. */
+.ovHEHG_panel {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-radius: 14px !important;
 }
 `;
       document.head.append(styleEl);

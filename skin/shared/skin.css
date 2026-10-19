@@ -72,11 +72,11 @@
   --dsw-alias-state-warn-primary: #FBBF24;
   --dsw-alias-state-warn-secondary: #FCD34D;
   --dsw-alias-state-warn-tertiary: rgba(251, 191, 36, 0.14);
-  --dsw-alias-tooltip-bg: rgba(37, 58, 125, 0.94);
+  --dsw-alias-tooltip-bg: rgba(15, 23, 42, 0.94);
   --dsw-shadow-lv2: 0 8px 24px rgba(0, 0, 0, 0.28);
   --dsw-specific-bubble: rgba(15, 23, 42, 0.75);
   --dsw-specific-input-major: rgba(15, 23, 42, 0.85);
-  --dsw-specific-menu: rgba(37, 58, 125, 0.94);
+  --dsw-specific-menu: rgba(15, 23, 42, 0.94);
   --dsw-specific-selector: rgba(255, 255, 255, 0.1);
   --dsw-specific-sidebar-fill: rgba(15, 23, 42, 0.42);
   --dsw-specific-sidebar-nav-item-active: rgba(147, 197, 253, 0.16);

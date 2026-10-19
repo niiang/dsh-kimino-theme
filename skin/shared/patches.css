@@ -186,8 +186,8 @@ div[role="menu"],
 div[role="dialog"][class*="popover"],
 div[class*="popover"],
 div[class*="dropdown-menu"] {
-  background: rgba(37, 58, 125, 0.94) !important;
-  background-color: rgba(37, 58, 125, 0.94) !important;
+  background: rgba(15, 23, 42, 0.94) !important;
+  background-color: rgba(15, 23, 42, 0.94) !important;
   backdrop-filter: blur(16px) saturate(130%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(130%) !important;
   border: 1px solid rgba(147, 197, 253, 0.35) !important;
@@ -324,10 +324,10 @@ div[role="menu"] > div {
   --kg-accent-border: rgba(147, 197, 253, 0.5);
   --kg-composer-bg: rgba(37, 58, 125, 0.85);
   --kg-composer-border: rgba(147, 197, 253, 0.45);
-  --kg-pop-bg: rgba(37, 58, 125, 0.94);
+  --kg-pop-bg: rgba(15, 23, 42, 0.94);
   --kg-pop-border: rgba(147, 197, 253, 0.35);
   --kg-tb-bg: rgba(37, 58, 125, 0.9);
-  --kg-think-bg: rgba(15, 23, 42, 0.5);
+  --kg-think-bg: rgba(8, 13, 26, 0.78);
   --kg-think-border: rgba(147, 197, 253, 0.2);
   --kg-user-bubble-bg: rgba(37, 58, 125, 0.62);
   --kg-user-bubble-border: rgba(147, 197, 253, 0.35);
@@ -350,16 +350,16 @@ div[role="menu"] > div {
   filter: brightness(1.06) !important;
 }
 .lcKema_title {
-  color: var(--kg-accent) !important;
-  font-weight: 600 !important;
+  color: #93C5FD !important;
+  font-weight: 700 !important;
 }
 .lcKema_summary, .lcKema_summaryText {
-  color: var(--kg-accent) !important;
-  opacity: 0.92 !important;
+  color: #BFDBFE !important;
+  opacity: 1 !important;
 }
 .lcKema_thinkBody {
-  color: var(--kg-menuitem-fg) !important;
-  opacity: 0.85 !important;
+  color: #DBEAFE !important;
+  opacity: 1 !important;
 }
 .lcKema_chevron, .lcKema_leading {
   color: var(--kg-accent) !important;
@@ -481,6 +481,13 @@ button, [role="menuitem"], .hHd-Xa_iconButton, .hHd-Xa_trigger {
 
 /* ── File viewer (CodeMirror 6): dark glass base so code/text stays
  * readable over the wallpaper — scoped to the editor surface only. */
+
+/* ── Menu item icons: brighten (dark glyphs vanish on dark glass) ── */
+[role="menuitem"] svg,
+[role="menuitem"] svg * {
+  color: #BFDBFE !important;
+  fill: #BFDBFE !important;
+}
 .cm-editor {
   background: rgba(15, 23, 42, 0.88) !important;
   border-radius: 12px !important;
@@ -494,21 +501,40 @@ button, [role="menuitem"], .hHd-Xa_iconButton, .hHd-Xa_trigger {
   color: rgba(148, 163, 184, 0.85) !important;
 }
 
-/* ── Right workspace panel (files tree / search): opaque dark glass so
- * tree text stays readable over the wallpaper. ── */
-.bhn1Oq_root {
-  background: rgba(15, 23, 42, 0.88) !important;
-  border: 1px solid rgba(147, 197, 253, 0.18) !important;
-  border-radius: 14px !important;
-  backdrop-filter: blur(10px) saturate(130%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(130%) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.25) !important;
-}
 .bhn1Oq_searchInput {
   color: #F8FAFC !important;
 }
 /* Document preview panel body: same glass treatment. */
 .Ku8BfW_body {
   background: rgba(15, 23, 42, 0.88) !important;
+  border-radius: 14px !important;
+}
+
+/* ── Right panel (files/preview host): opaque dark glass so the tree and
+ * editor stay readable over the wallpaper. ── */
+.P3OORG_panel {
+  background: rgba(15, 23, 42, 0.94) !important;
+  border: 1px solid rgba(147, 197, 253, 0.18) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+.nArs4W_editorTreePanel {
+  background: rgba(15, 23, 42, 0.55) !important;
+  border-radius: 10px !important;
+}
+
+/* ── Plugin manager page: dark glass base (page was fully transparent) ── */
+
+
+/* ── Main-area pages (plugins / schedule / settings …): dark glass base.
+ * Only when the conversation view is NOT mounted — the chat screen keeps
+ * its bright wallpaper. One rule covers every non-conversation page. ── */
+.pI_x6G_centerCol:not(:has(.wSkVaW_root)) {
+  background: rgba(10, 16, 30, 0.86) !important;
+}
+/* Schedule (自动化任务) panel: same glass, belt-and-braces. */
+.ovHEHG_panel {
+  background: rgba(15, 23, 42, 0.9) !important;
   border-radius: 14px !important;
 }

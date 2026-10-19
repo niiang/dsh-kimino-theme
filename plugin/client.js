@@ -23,12 +23,12 @@ return {
         '给智能体发消息': '黄昏之时，我在这里等你。',
         'Message the agent': '黄昏の時、私はここにいるよ。',
         '描述你想要构建的内容': '君の名は。想构建怎样的世界？',
-        'Describe what you want to build': '君の名は。どんな世界を構築する？',
-        // DSH 0.1.7+ generation
-        '发消息或创建任务, / 调用指令, @ 文件或对话': '黄昏之时，我在这里等你。',
-        'Message or run a task, / commands, @ files or sessions': '黄昏の時、私はここにいるよ。',
-        '描述你想要构建的内容, / 调用指令, @ 文件或对话': '君の名は。想构建怎样的世界？',
-        'Describe what you want to build, / commands, @ files or sessions': '君の名は。どんな世界を構築する？',
+        'Describe what you want to build': '君の名は。どんな世界を構築する？',
+        // DSH 0.1.7+ generation
+        '发消息或创建任务, / 调用指令, @ 文件或对话': '黄昏之时，我在这里等你。',
+        'Message or run a task, / commands, @ files or sessions': '黄昏の時、私はここにいるよ。',
+        '描述你想要构建的内容, / 调用指令, @ 文件或对话': '君の名は。想构建怎样的世界？',
+        'Describe what you want to build, / commands, @ files or sessions': '君の名は。どんな世界を構築する？',
       };
       const walk = () => {
         document.querySelectorAll('textarea, [data-placeholder], [data-composer-placeholder]').forEach((el) => {
@@ -68,6 +68,9 @@ return {
       '--dsw-alias-border-l3': pair('rgba(147,197,253,0.28)'),
       '--dsw-alias-border-l2-darkmode-thin': pair('rgba(147,197,253,0.16)'),
       '--dsw-alias-brand-primary': pair('#93C5FD'),
+      '--dsw-alias-brand-primary-invert': pair('#0f172a'),
+      '--dsw-alias-brand-text': pair('#e2e8f0'),
+      '--dsw-alias-button-contrast-fill': pair('#0f172a'),
       '--dsw-alias-button-elevated-fill': pair('rgba(255,255,255,0.08)'),
       '--dsw-alias-button-floating-fill': pair('rgba(255,255,255,0.1)'),
       '--dsw-alias-button-floating-hover': pair('rgba(255,255,255,0.15)'),
@@ -80,6 +83,8 @@ return {
       '--dsw-alias-button-tool-bar-fill-invisible': pair('rgba(255,255,255,0.1)'),
       '--dsw-alias-button-info-fill': pair('#93C5FD'),
       '--dsw-alias-button-info-hover': pair('#7CAEFD'),
+      '--dsw-alias-button-primary-fill': pair('#93C5FD'),
+      '--dsw-alias-button-primary-hover': pair('#7CAEFD'),
       '--dsw-alias-interactive-bg-hover': pair('rgba(255,255,255,0.08)'),
       '--dsw-alias-interactive-bg-hover-solid': pair('rgba(255,255,255,0.1)'),
       '--dsw-alias-interactive-bg-active': pair('rgba(147,197,253,0.16)'),
@@ -89,7 +94,10 @@ return {
       '--dsw-alias-label-secondary': pair('#CBD5E1'),
       '--dsw-alias-label-tertiary': pair('#93C5FD'),
       '--dsw-alias-label-caption': pair('#94A3B8'),
+      '--dsw-alias-label-dimmed': pair('#64748B'),
       '--dsw-alias-label-primary-dimmed': pair('#A5B4FC'),
+      '--dsw-alias-label-primary-foreground': pair('#0f172a'),
+      '--dsw-alias-label-primary-inverted': pair('#0f172a'),
       '--dsw-alias-markdown-inline-code': pair('rgba(147,197,253,0.12)'),
       '--dsw-alias-markdown-code-block': pair('rgba(13,17,23,0.55)'),
       '--dsw-alias-markdown-code-block-banner': pair('rgba(147,197,253,0.08)'),
@@ -117,8 +125,11 @@ return {
       '--dsw-specific-tip': pair('rgba(13,17,23,0.75)'),
       '--dsw-specific-menu': pair('rgba(15,23,42,0.94)'),
       '--dsw-specific-selector': pair('rgba(255,255,255,0.1)'),
+      '--dsw-alias-scrollbar-bg-l1': pair('rgba(15,23,42,0.35)'),
       '--dsw-alias-scrollbar-bg-l2': pair('rgba(147,197,253,0.32)'),
+      '--dsw-alias-scrollbar-hover-l1': pair('rgba(147,197,253,0.42)'),
       '--dsw-alias-scrollbar-hover-l2': pair('rgba(147,197,253,0.55)'),
+      '--dsw-alias-tooltip-bg': pair('rgba(15,23,42,0.94)'),
       '--dsw-shadow-lv2': pair('0 8px 24px rgba(0,0,0,0.28)'),
     });
     ctx.effect(() => dispose);
@@ -156,6 +167,11 @@ return {
       document.querySelectorAll('.Md3f7G_scroll:not([data-conversation-scroll])').forEach((el) => {
         el.setAttribute('data-conversation-scroll', '');
       });
+      // NOTE: no .wSkVaW_viewArea companion. The 0.1.7+ sinking CSS is
+      // active (fade mask kept deliberately — see the stylesheet note),
+      // and attach() caches its resolved scroller at mount time, before
+      // any observer can mark viewArea, so a post-hoc bridge loses the
+      // race and only adds noise. Measured and rolled back; do not re-add.
     };
     markChatScrollers();
     const chatScrollerObserver = new MutationObserver(markChatScrollers);
@@ -307,9 +323,16 @@ body[data-ds-dark-theme] [data-chat-flow] {
 }
 
 /* 0.1.7+ layout: sink the viewport into viewArea so the bottom fade mask
- * never clips the sticky composer. Guards: :not(:has(.Md3f7G_scroll)) =
- * new layout only (rc.6 block above owns the old one, mutually exclusive);
- * :not(:has([data-conversation-composer-overlay])) = plain mode only. */
+ * never clips the sticky composer. KNOWN TRADE-OFF (kept deliberately,
+ * 2026-10-20): on this build the official scrollBody is the scroller and
+ * the component caches its resolved scrollport at mount time, so sinking
+ * costs position restore / auto-follow / back-to-bottom (sessions reopen
+ * at the top). The fade mask was judged worth it — retiring the sinking
+ * was tried and rolled back the same night. Do NOT re-attempt a viewArea
+ * marking bridge: it loses the mount-time race (see markChatScrollers).
+ * Guards: :not(:has(.Md3f7G_scroll)) = new layout only (rc.6 block above
+ * owns the old one); :not(:has([data-conversation-composer-overlay])) =
+ * plain mode only. */
 .wSkVaW_root[data-phase="active"] .wSkVaW_scrollBody:not(:has(.Md3f7G_scroll)):not(:has([data-conversation-composer-overlay])) {
   overflow: hidden !important;
   display: flex !important;
@@ -573,6 +596,170 @@ div[role="menu"] > div {
 *::-webkit-scrollbar-corner {
   background: transparent !important;
 }
+
+/* ═══ v68 · dual-mode glass + 0.1.7 polish — synced from skin/shared/patches.css ═══ */
+
+/* ── mode variables: one comet palette for both modes ─────────────── */
+:root {
+  --kg-accent: #93C5FD;
+  --kg-accent-border: rgba(147, 197, 253, 0.5);
+  --kg-composer-bg: rgba(37, 58, 125, 0.85);
+  --kg-composer-border: rgba(147, 197, 253, 0.45);
+  --kg-pop-bg: rgba(15, 23, 42, 0.94);
+  --kg-pop-border: rgba(147, 197, 253, 0.35);
+  --kg-tb-bg: rgba(37, 58, 125, 0.9);
+  --kg-think-bg: rgba(8, 13, 26, 0.78);
+  --kg-think-border: rgba(147, 197, 253, 0.2);
+  --kg-user-bubble-bg: rgba(37, 58, 125, 0.62);
+  --kg-user-bubble-border: rgba(147, 197, 253, 0.35);
+  --kg-menuitem-fg: #e2e8f0;
+  --kg-hi: rgba(255, 255, 255, 0.14);
+  --kg-focus: rgba(147, 197, 253, 0.35);
+  --kg-sel-bg: rgba(147, 197, 253, 0.4);
+  --kg-sel-color: #0B1220;
+}
+
+/* ── 2 · think / reasoning row (0.1.7 lcKema_) ─────────────────────── */
+.lcKema_root {
+  background: var(--kg-think-bg) !important;
+  border: 1px solid var(--kg-think-border) !important;
+  border-radius: 12px !important;
+  transition: background 0.2s ease !important;
+}
+.lcKema_root:hover {
+  background: var(--kg-think-bg) !important;
+  filter: brightness(1.06) !important;
+}
+.lcKema_title {
+  color: #93C5FD !important;
+  font-weight: 700 !important;
+}
+.lcKema_summary, .lcKema_summaryText {
+  color: #BFDBFE !important;
+  opacity: 1 !important;
+}
+.lcKema_thinkBody {
+  color: #DBEAFE !important;
+  opacity: 1 !important;
+}
+.lcKema_chevron, .lcKema_leading {
+  color: var(--kg-accent) !important;
+}
+
+/* ── 3 · scroll-to-bottom button (0.1.7 EvIC1a_toBottom) ───────────── */
+.EvIC1a_toBottom {
+  background: var(--kg-tb-bg) !important;
+  border: 1px solid var(--kg-accent-border) !important;
+  border-radius: 999px !important;
+  backdrop-filter: blur(12px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(130%) !important;
+  box-shadow: inset 0 1px 0 var(--kg-hi), 0 6px 18px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ── 4 · dual-mode glass + edge highlight for composer / seat / popovers */
+[data-composer-card] {
+  background: var(--kg-composer-bg) !important;
+  border-color: var(--kg-composer-border) !important;
+  box-shadow: inset 0 1px 0 var(--kg-hi) !important;
+}
+[data-composer-card]:focus-within {
+  border-color: var(--kg-accent) !important;
+}
+[data-composer-seat] > * {
+  background: var(--kg-composer-bg) !important;
+  border-color: var(--kg-composer-border) !important;
+  box-shadow: inset 0 1px 0 var(--kg-hi), 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+}
+[data-radix-popper-content-wrapper] > div,
+div[role="menu"],
+div[role="dialog"][class*="popover"],
+div[class*="popover"],
+div[class*="dropdown-menu"] {
+  background: var(--kg-pop-bg) !important;
+  background-color: var(--kg-pop-bg) !important;
+  border-color: var(--kg-pop-border) !important;
+  box-shadow: inset 0 1px 0 var(--kg-hi), 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+[role="menuitem"] {
+  color: var(--kg-menuitem-fg) !important;
+}
+[role="menuitem"]:hover,
+[role="menuitem"][data-highlighted] {
+  background: rgba(147, 197, 253, 0.12) !important;
+}
+/* ── 5 · composer focus ring ───────────────────────────────────────── */
+[data-composer-card]:focus-within {
+  box-shadow: inset 0 1px 0 var(--kg-hi), 0 0 0 2px var(--kg-focus) !important;
+}
+
+/* ── 6 · user vs assistant bubbles ─────────────────────────────────── */
+.Sixlwa_userRow .Sixlwa_bubble {
+  background: var(--kg-user-bubble-bg) !important;
+  border: 1px solid var(--kg-user-bubble-border) !important;
+}
+
+/* ── 7 · selection color ───────────────────────────────────────────── */
+::selection {
+  background: var(--kg-sel-bg) !important;
+  color: var(--kg-sel-color) !important;
+}
+
+/* ── 8 · unified hover transitions ─────────────────────────────────── */
+button, [role="menuitem"], .hHd-Xa_iconButton, .hHd-Xa_trigger {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+/* ── 9 · comet streak on the hero screen ───────────────────────────── */
+[data-phase="hero"] .pXSMma_body {
+  position: relative;
+  overflow: hidden;
+}
+[data-phase="hero"] .pXSMma_body::after {
+  content: '';
+  position: absolute;
+  top: 8%;
+  right: -6%;
+  width: 320px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(270deg, rgba(197, 171, 252, 0.95), rgba(147, 197, 253, 0.5) 40%, transparent);
+  filter: drop-shadow(0 0 6px rgba(165, 180, 252, 0.8));
+  transform: rotate(-16deg);
+  opacity: 0;
+  animation: kimino-comet 11s ease-in 2.5s infinite;
+  pointer-events: none;
+}
+[data-phase="hero"] .pXSMma_body::before {
+  content: '';
+  position: absolute;
+  top: 26%;
+  right: -4%;
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(270deg, rgba(147, 197, 253, 0.8), transparent);
+  filter: drop-shadow(0 0 4px rgba(147, 197, 253, 0.6));
+  transform: rotate(-13deg);
+  opacity: 0;
+  animation: kimino-comet 11s ease-in 8s infinite;
+  pointer-events: none;
+}
+@keyframes kimino-comet {
+  0% { transform: translate(0, 0) rotate(-16deg); opacity: 0; }
+  3% { opacity: 1; }
+  13% { transform: translate(-46vw, 22vh) rotate(-16deg); opacity: 0; }
+  100% { transform: translate(-46vw, 22vh) rotate(-16deg); opacity: 0; }
+}
+
+/* ── 11 · weak-GPU degrade: less translucency ──────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  [data-composer-card], [data-composer-seat] > *,
+  [data-radix-popper-content-wrapper] > div, div[role="menu"],
+  .lcKema_root, .EvIC1a_toBottom {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
 /* ── File viewer (CodeMirror 6): dark glass base so code/text stays
  * readable over the wallpaper — scoped to the editor surface only. */
 
@@ -601,15 +788,45 @@ div[role="menu"] > div {
   border-radius: 14px !important;
 }
 
-/* ── Right workspace panel (files tree / search): opaque dark glass so
- * tree text stays readable over the wallpaper. ── */
-.bhn1Oq_root {
-  background: rgba(15, 23, 42, 0.88) !important;
+/* ── Right sidebar / workspace panels: dark glass readability ──
+ * .P3OORG_panel (ui-sidebar-right) is an always-mounted, full-height,
+ * right-anchored container whose children hide via visibility when the
+ * sidebar is closed — painting the container unconditionally leaves a
+ * permanent dark slab over the right side (the "cover" bug). Guard with
+ * the official [data-sidebar-right-open] state attribute so the glass
+ * shows only while the sidebar is open. */
+.P3OORG_panel[data-sidebar-right-open] {
+  background: rgba(15, 23, 42, 0.94) !important;
   border: 1px solid rgba(147, 197, 253, 0.18) !important;
   border-radius: 14px !important;
-  backdrop-filter: blur(10px) saturate(130%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(130%) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+/* The workspace files tree (bhn1Oq_root) deliberately carries NO custom
+ * rule here — c7f9bfe removed the old 0.88+blur override so the panel
+ * rides the token layer (--dsw-alias-bg-layer-*: near-opaque slate),
+ * which is the readable look the skin form ships. Do not re-add it. */
+/* Newer builds rename the tree panel host; inert where absent. */
+.nArs4W_editorTreePanel {
+  background: rgba(15, 23, 42, 0.55) !important;
+  border-radius: 10px !important;
+}
+
+/* ── Deliverables change-summary card (hz8-rW_, "已编辑 N 个文件") ──
+ * The official tile recipe branches on body[data-ds-dark-theme]: light
+ * mode paints color-mix(neutral-00 50%) — a pure-white square on this
+ * theme's forced dark glass (the theme keeps one visual across modes
+ * without flipping the dark attribute). Normalize both modes to the
+ * dark slate recipe with comet-blue accents. */
+.hz8-rW_header {
+  background: rgba(15, 23, 42, 0.55) !important;
+}
+button.hz8-rW_header:hover:not(:disabled),
+button.hz8-rW_header:focus-visible {
+  background: rgba(15, 23, 42, 0.72) !important;
+}
+.hz8-rW_tile {
+  background: rgba(147, 197, 253, 0.14) !important;
+  border: 1px solid rgba(147, 197, 253, 0.28) !important;
 }
 .bhn1Oq_searchInput {
   color: #F8FAFC !important;

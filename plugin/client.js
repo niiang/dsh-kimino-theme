@@ -582,6 +582,25 @@ div[role="menu"] > div {
 .cm-scroller {
   background: transparent !important;
 }
+
+/* ── Right workspace panel (files tree / search): opaque dark glass so
+ * tree text stays readable over the wallpaper. ── */
+.bhn1Oq_root {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border: 1px solid rgba(147, 197, 253, 0.18) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(10px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(130%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+.bhn1Oq_searchInput {
+  color: #F8FAFC !important;
+}
+/* Document preview panel body: same glass treatment. */
+.Ku8BfW_body {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border-radius: 14px !important;
+}
 .cm-gutters {
   background: rgba(15, 23, 42, 0.6) !important;
   border-right: 1px solid rgba(147, 197, 253, 0.18) !important;

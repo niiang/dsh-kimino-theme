@@ -231,6 +231,92 @@ window.__ModuleLoader__.load({
       };
       document.addEventListener('scroll', relayChatScroll, true);
       ctx.effect(() => () => document.removeEventListener('scroll', relayChatScroll, true));
+      // ── 动态壁纸引擎 ─────────────────────────────────────────────────
+      // 技术移植自 @linxin666/dsh-client-ui-skin-center（Apache-2.0）：
+      // body 级 fixed 图层（z-index:-2，垫在 body::before 模糊层之下）承载
+      // 无缝循环视频；开启时 body 自身背景退化为纯渐变蒙版（html[data-kimino-live]），
+      // 视频透过渐变与模糊层呈现，与静态 jpg 完全同构。开关挂在输入框工具行
+      // conversation.input.left 扩展槽，偏好存 localStorage；减弱动效用户与
+      // 后台标签页不解码视频帧（回落静态 / 暂停）。
+      const LIVE_KEY = 'kimino-live';
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+      const liveWanted = () => localStorage.getItem(LIVE_KEY) === '1' && !reducedMotion.matches;
+      const bgLayer = document.createElement('div');
+      bgLayer.setAttribute('data-kimino-backdrop', '');
+      bgLayer.setAttribute('aria-hidden', 'true');
+      bgLayer.style.cssText = 'position:fixed;top:0;right:0;bottom:0;left:0;z-index:-2;pointer-events:none;overflow:hidden;';
+      const liveVideo = document.createElement('video');
+      liveVideo.src = '/kimino-bg/live.mp4';
+      liveVideo.muted = true;
+      liveVideo.loop = true;
+      liveVideo.autoplay = true;
+      liveVideo.playsInline = true;
+      liveVideo.setAttribute('aria-hidden', 'true');
+      liveVideo.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;';
+      bgLayer.append(liveVideo);
+      const setLiveAttr = (on) => {
+        if (on) document.documentElement.setAttribute('data-kimino-live', '');
+        else document.documentElement.removeAttribute('data-kimino-live');
+      };
+      const applyLive = (on) => {
+        if (on) {
+          document.body.append(bgLayer);
+          liveVideo.play().catch(() => {});
+          // 只在视频真的解出第一帧后才把 body 背景切到纯渐变；
+          // 路由缺失 / 解码失败时保持静态图，绝不白屏。
+          if (liveVideo.readyState >= 2) setLiveAttr(true);
+          else {
+            liveVideo.addEventListener('loadeddata', () => { if (bgLayer.isConnected) setLiveAttr(true); }, { once: true });
+            liveVideo.addEventListener('error', () => { if (bgLayer.isConnected) applyLive(false); }, { once: true });
+          }
+        } else {
+          setLiveAttr(false);
+          bgLayer.remove();
+          liveVideo.pause();
+        }
+      };
+      const onVisibility = () => {
+        if (document.hidden) liveVideo.pause();
+        else if (bgLayer.isConnected) liveVideo.play().catch(() => {});
+      };
+      document.addEventListener('visibilitychange', onVisibility);
+      const toggleIcon = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke-width="1.3"><rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor"/><path d="M5.5 2.5v11M10.5 2.5v11" stroke="currentColor"/></svg>';
+      const injectLiveToggle = () => {
+        const slot = document.querySelector('[data-slot="conversation.input.left"]');
+        if (slot === null || slot.querySelector('[data-kimino-toggle]') !== null) return;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.setAttribute('data-kimino-toggle', '');
+        btn.title = '动态壁纸';
+        btn.setAttribute('aria-label', '切换动态壁纸');
+        btn.innerHTML = toggleIcon;
+        const sync = () => {
+          const on = liveWanted();
+          btn.setAttribute('aria-pressed', String(on));
+          applyLive(on);
+        };
+        btn.addEventListener('click', () => {
+          localStorage.setItem(LIVE_KEY, liveWanted() ? '0' : '1');
+          sync();
+        });
+        slot.append(btn);
+        sync();
+      };
+      injectLiveToggle();
+      // React 重挂输入卡（切换会话）后补挂开关、对齐引擎状态。
+      const liveToggleObserver = new MutationObserver(() => {
+        injectLiveToggle();
+        const on = liveWanted();
+        if (on !== bgLayer.isConnected) applyLive(on);
+      });
+      liveToggleObserver.observe(document.body, { subtree: true, childList: true });
+      reducedMotion.addEventListener?.('change', () => applyLive(liveWanted()));
+      ctx.effect(() => () => {
+        liveToggleObserver.disconnect();
+        document.removeEventListener('visibilitychange', onVisibility);
+        document.querySelectorAll('[data-kimino-toggle]').forEach((el) => el.remove());
+        applyLive(false);
+      });
       const styleEl = document.createElement('style');
       styleEl.id = 'kimino-theme';
       styleEl.setAttribute('data-plugin', 'dsh-kimino-theme');
@@ -877,6 +963,41 @@ button.hz8-rW_header:focus-visible {
 .ovHEHG_panel {
   background: rgba(15, 23, 42, 0.9) !important;
   border-radius: 14px !important;
+}
+
+/* ── Live wallpaper engine (html[data-kimino-live]) ──────────────────
+ * The video rides a fixed layer at z-index:-2 under the body::before
+ * blur; body's own background collapses to the scrim gradient so the
+ * film shows through exactly like the static jpg does. */
+html[data-kimino-live] body,
+html[data-kimino-live] body[data-ds-dark-theme] {
+  background-image: linear-gradient(180deg, rgba(4,7,18,0.12) 0%, rgba(8,11,28,0.06) 45%, rgba(14,8,26,0.10) 100%) !important;
+  background-size: cover !important;
+}
+
+/* ── Live wallpaper toggle ────────────────────────────────────────────
+ * Sized/styled to match the official uV2eYG_add tool button (28x28
+ * pill, token-tinted); pressed state = comet blue. */
+button[data-kimino-toggle] {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 999px !important;
+  flex: none !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #98b6fc !important;
+  cursor: pointer !important;
+}
+button[data-kimino-toggle]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+button[data-kimino-toggle][aria-pressed="true"] {
+  background: rgba(147, 197, 253, 0.22) !important;
+  color: #93C5FD !important;
+  box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.45) !important;
 }
 `;
       document.head.append(styleEl);

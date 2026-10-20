@@ -43,7 +43,7 @@ It is a standard dsh plugin package: one `dsh plugin` command installs it into a
 
 | Dimension | Native dsh web | dsh-kimino-theme |
 | --- | --- | --- |
-| Background | Solid / solid gradient | **Live cinematic wallpaper** (1080p silent seamless-loop video) + global blur veil |
+| Background | Solid / solid gradient | **Static/live cinematic wallpaper, one-click switch** (composer toggle; 1080p silent seamless-loop video) + global blur veil |
 | Surfaces | Opaque layers | Translucent frosted glass (backdrop-filter) |
 | Branding | DSH default | Movie logo (expanded + collapsed marks) |
 | Composer | Default styling | Navy glass card, themed placeholders |
@@ -64,7 +64,7 @@ The theme layers roughly 60 design-token overrides through the official `theme.o
 
 ### Wallpaper and logos
 
-- **Two wallpaper variants**: the skin form ships `kimino` (static cinematic still) and `kimino-live` (1080p silent seamless-loop video, 0.6s crossfaded head/tail, only 0.78MB) — clean stillness or drifting light behind the glass, your pick (see the Skin-center route); the plugin form uses the static cinematic image (served at `/kimino-bg/current.jpg`, `assets/current.jpg` inside the package). All variants stack a subtle dark gradient for text legibility;
+- **Two wallpaper variants**: the skin form ships `kimino` (static cinematic still) and `kimino-live` (1080p silent seamless-loop video, 0.6s crossfaded head/tail, only 0.78MB) — clean stillness or drifting light behind the glass, your pick (see the Skin-center route); the plugin form defaults to the static cinematic image (served at `/kimino-bg/current.jpg`) and switches to the live wallpaper via the **film-icon toggle in the composer toolbar** (served at `/kimino-bg/live.mp4`, `assets/live.mp4` inside the package; preference remembered locally, applies instantly). All variants stack a subtle dark gradient for text legibility;
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
 

@@ -1,6 +1,7 @@
 // Kimi no Na wa theme — host half of the dsh-kimino-theme bundle.
-// Owns the three asset routes the browser half's CSS references:
-//   /kimino-bg/current.jpg      cinematic wallpaper (body background)
+// Owns the four asset routes the browser half references:
+//   /kimino-bg/current.jpg      cinematic wallpaper (static body background)
+//   /kimino-bg/live.mp4         seamless-loop film video (live wallpaper mode)
 //   /kimino-bg/logo-blue.svg    sidebar brand + hero headline logo
 //   /kimino-bg/logo-letter.svg  collapsed-sidebar mark
 // Asset paths resolve relative to this file, so the bundle works from any
@@ -17,6 +18,11 @@ const ROUTES = [
     path: '/kimino-bg/current.jpg',
     file: join(assets, 'current.jpg'),
     type: 'image/jpeg',
+  },
+  {
+    path: '/kimino-bg/live.mp4',
+    file: join(assets, 'live.mp4'),
+    type: 'video/mp4',
   },
   {
     path: '/kimino-bg/logo-blue.svg',

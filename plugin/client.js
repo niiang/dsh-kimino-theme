@@ -480,6 +480,44 @@ div[role="menu"] > div {
   background: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
 }
+
+/* ── Slash trigger menu (composer "/" palette, data-trigger-menu) ──
+ * Neither a radix popover nor role="menu" (it is role="listbox"), so the
+ * popover rules above never matched it and the official translucent
+ * MenuSurface fill clashed with the glass theme. The surface material
+ * layer reads --dsw-menu-surface-fill / --dsw-menu-backdrop-filter, so
+ * override those two tokens on the menu root (hash-class-free) and dress
+ * the rows with the same comet-blue slate as every other popup. */
+[data-trigger-menu] {
+  --dsw-menu-surface-fill: var(--kg-pop-bg) !important;
+  --dsw-menu-backdrop-filter: blur(16px) saturate(130%) !important;
+  border: 1px solid var(--kg-pop-border) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px 0 var(--kg-hi), 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+[data-trigger-menu] [role="option"] {
+  color: var(--kg-menuitem-fg) !important;
+  border-radius: 8px !important;
+}
+[data-trigger-menu] [role="option"]:hover {
+  background: rgba(147, 197, 253, 0.12) !important;
+}
+[data-trigger-menu] [role="option"][aria-selected="true"] {
+  background: rgba(147, 197, 253, 0.2) !important;
+  color: #ffffff !important;
+}
+[data-trigger-menu] ._3e4SsG_sectionTitle {
+  color: #94A3B8 !important;
+}
+[data-trigger-menu] ._3e4SsG_itemIcon {
+  color: #BFDBFE !important;
+}
+[data-trigger-menu] ._3e4SsG_itemAlias {
+  color: rgba(147, 197, 253, 0.75) !important;
+}
+[data-trigger-menu] ._3e4SsG_itemDescription {
+  color: #94A3B8 !important;
+}
 [data-phase="hero"] .pXSMma_fish,
 [data-phase="hero"] .pXSMma_headlineText, [data-phase="hero"] .pXSMma_titleGroup,
 [data-phase="hero"] .pXSMma_previewBadge {

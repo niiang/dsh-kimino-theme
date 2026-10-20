@@ -231,16 +231,39 @@ window.__ModuleLoader__.load({
       };
       document.addEventListener('scroll', relayChatScroll, true);
       ctx.effect(() => () => document.removeEventListener('scroll', relayChatScroll, true));
-      // ── 动态壁纸引擎 ─────────────────────────────────────────────────
+      // ── 控制中心 + 动态壁纸引擎 ─────────────────────────────────────
       // 技术移植自 @linxin666/dsh-client-ui-skin-center（Apache-2.0）：
       // body 级 fixed 图层（z-index:-2，垫在 body::before 模糊层之下）承载
-      // 无缝循环视频；开启时 body 自身背景退化为纯渐变蒙版（html[data-kimino-live]），
-      // 视频透过渐变与模糊层呈现，与静态 jpg 完全同构。开关挂在输入框工具行
-      // conversation.input.left 扩展槽，偏好存 localStorage；减弱动效用户与
-      // 后台标签页不解码视频帧（回落静态 / 暂停）。
+      // 无缝循环视频；开启时 body 自身背景退化为纯渐变蒙版（html[data-kimino-live]）。
+      // 胶片按钮打开「控制中心」面板：动态壁纸开关 + 背景模糊 / 背景加深 /
+      // 输入卡模糊三个滑杆，全部经 CSS 变量即时生效，偏好存 localStorage
+      // （kimino-controls，兼容旧 kimino-live 键）；减弱动效用户与后台标签页
+      // 不解码视频帧（回落静态 / 暂停）。
+      const CONTROLS_KEY = 'kimino-controls';
       const LIVE_KEY = 'kimino-live';
+      const CONTROL_DEFAULTS = { live: true, bgBlur: 1, veil: 0, cardBlur: 0 };
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-      const liveWanted = () => localStorage.getItem(LIVE_KEY) === '1' && !reducedMotion.matches;
+      const clampNum = (v, min, max, dflt) => (typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : dflt);
+      const loadControls = () => {
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(CONTROLS_KEY) || '{}'); } catch { saved = {}; }
+        return {
+          live: typeof saved.live === 'boolean' ? saved.live : (localStorage.getItem(LIVE_KEY) === null ? CONTROL_DEFAULTS.live : localStorage.getItem(LIVE_KEY) === '1'),
+          bgBlur: clampNum(saved.bgBlur, 0, 20, CONTROL_DEFAULTS.bgBlur),
+          veil: clampNum(saved.veil, 0, 100, CONTROL_DEFAULTS.veil),
+          cardBlur: clampNum(saved.cardBlur, 0, 20, CONTROL_DEFAULTS.cardBlur),
+        };
+      };
+      let ctrl = loadControls();
+      const saveControls = () => localStorage.setItem(CONTROLS_KEY, JSON.stringify(ctrl));
+      const wantsLive = () => ctrl.live && !reducedMotion.matches;
+      const applyControls = () => {
+        const root = document.documentElement;
+        root.style.setProperty('--kimino-bg-blur', `${ctrl.bgBlur}px`);
+        root.style.setProperty('--kimino-veil', (ctrl.veil / 100).toFixed(2));
+        root.style.setProperty('--kimino-card-blur', `${ctrl.cardBlur}px`);
+        applyLive(wantsLive());
+      };
       const bgLayer = document.createElement('div');
       bgLayer.setAttribute('data-kimino-backdrop', '');
       bgLayer.setAttribute('aria-hidden', 'true');
@@ -281,41 +304,225 @@ window.__ModuleLoader__.load({
       };
       document.addEventListener('visibilitychange', onVisibility);
       const toggleIcon = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke-width="1.3"><rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor"/><path d="M5.5 2.5v11M10.5 2.5v11" stroke="currentColor"/></svg>';
-      const injectLiveToggle = () => {
-        const slot = document.querySelector('[data-slot="conversation.input.left"]');
-        if (slot === null || slot.querySelector('[data-kimino-toggle]') !== null) return;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.setAttribute('data-kimino-toggle', '');
-        btn.title = '动态壁纸';
-        btn.setAttribute('aria-label', '切换动态壁纸');
-        btn.innerHTML = toggleIcon;
-        const sync = () => {
-          const on = liveWanted();
-          btn.setAttribute('aria-pressed', String(on));
-          applyLive(on);
+      let ccPanel = null;
+      const buildPanel = () => {
+        const panel = document.createElement('div');
+        panel.setAttribute('data-kimino-panel', '');
+        panel.setAttribute('role', 'dialog');
+        panel.setAttribute('aria-label', 'kimino 控制中心');
+        const head = document.createElement('div');
+        head.className = 'kimino-cc-head';
+        head.textContent = '君の名は · 控制中心';
+        panel.append(head);
+        const switchRow = document.createElement('div');
+        switchRow.className = 'kimino-cc-row';
+        const switchLabel = document.createElement('span');
+        switchLabel.textContent = '动态壁纸';
+        const switchBtn = document.createElement('button');
+        switchBtn.type = 'button';
+        switchBtn.className = 'kimino-cc-toggle';
+        switchBtn.setAttribute('aria-label', '切换动态壁纸');
+        switchRow.append(switchLabel, switchBtn);
+        panel.append(switchRow);
+        const sep = document.createElement('div');
+        sep.className = 'kimino-cc-sep';
+        panel.append(sep);
+        const inputs = [];
+        for (const s of [
+          { key: 'bgBlur', label: '背景模糊', min: 0, max: 20, step: 1, unit: 'px' },
+          { key: 'veil', label: '背景加深', min: 0, max: 100, step: 5, unit: '%' },
+          { key: 'cardBlur', label: '输入卡模糊', min: 0, max: 20, step: 1, unit: 'px' },
+        ]) {
+          const row = document.createElement('div');
+          row.className = 'kimino-cc-row';
+          const lab = document.createElement('span');
+          lab.textContent = s.label;
+          const input = document.createElement('input');
+          input.type = 'range';
+          input.min = String(s.min);
+          input.max = String(s.max);
+          input.step = String(s.step);
+          input.setAttribute('aria-label', s.label);
+          const val = document.createElement('span');
+          val.className = 'kimino-cc-val';
+          row.append(lab, input, val);
+          panel.append(row);
+          inputs.push({ ...s, input, val });
+        }
+        const foot = document.createElement('div');
+        foot.className = 'kimino-cc-foot';
+        const resetBtn = document.createElement('button');
+        resetBtn.type = 'button';
+        resetBtn.className = 'kimino-cc-reset';
+        resetBtn.textContent = '重置';
+        foot.append(resetBtn);
+        panel.append(foot);
+        const syncUi = () => {
+          switchBtn.setAttribute('aria-pressed', String(ctrl.live));
+          for (const it of inputs) {
+            it.input.value = String(ctrl[it.key]);
+            it.val.textContent = `${ctrl[it.key]}${it.unit}`;
+          }
         };
-        btn.addEventListener('click', () => {
-          localStorage.setItem(LIVE_KEY, liveWanted() ? '0' : '1');
-          sync();
+        switchBtn.addEventListener('click', () => {
+          ctrl.live = !ctrl.live;
+          saveControls();
+          applyControls();
+          syncUi();
         });
-        slot.append(btn);
-        sync();
+        for (const it of inputs) {
+          it.input.addEventListener('input', () => {
+            ctrl[it.key] = Number(it.input.value);
+            saveControls();
+            applyControls();
+            it.val.textContent = `${ctrl[it.key]}${it.unit}`;
+          });
+        }
+        // 重置只回视觉参数，不打扰动态壁纸的开关状态。
+        resetBtn.addEventListener('click', () => {
+          ctrl = { ...CONTROL_DEFAULTS, live: ctrl.live };
+          saveControls();
+          applyControls();
+          syncUi();
+        });
+        syncUi();
+        return panel;
       };
-      injectLiveToggle();
-      // React 重挂输入卡（切换会话）后补挂开关、对齐引擎状态。
+      const closePanel = () => {
+        if (ccPanel !== null) ccPanel.removeAttribute('data-open');
+        const b = document.querySelector('[data-kimino-toggle]');
+        if (b !== null) b.setAttribute('aria-expanded', 'false');
+      };
+      const openPanel = (btn) => {
+        if (ccPanel === null) return;
+        ccPanel.setAttribute('data-open', '');
+        const rect = btn.getBoundingClientRect();
+        ccPanel.style.top = '0px';
+        ccPanel.style.left = `${Math.max(8, Math.min(rect.left, window.innerWidth - 284))}px`;
+        ccPanel.style.top = `${Math.max(8, rect.top - ccPanel.offsetHeight - 8)}px`;
+        btn.setAttribute('aria-expanded', 'true');
+      };
+      const mountControlCenter = () => {
+        const slot = document.querySelector('[data-slot="conversation.input.left"]');
+        if (slot === null) return;
+        if (document.querySelector('[data-kimino-toggle]') === null) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('data-kimino-toggle', '');
+          btn.title = 'kimino 控制中心';
+          btn.setAttribute('aria-label', '打开 kimino 控制中心');
+          btn.setAttribute('aria-haspopup', 'dialog');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.innerHTML = toggleIcon;
+          btn.addEventListener('click', () => {
+            const open = ccPanel !== null && ccPanel.hasAttribute('data-open');
+            if (open) closePanel();
+            else openPanel(btn);
+          });
+          slot.append(btn);
+        }
+        if (ccPanel === null || !ccPanel.isConnected) {
+          ccPanel = buildPanel();
+          document.body.append(ccPanel);
+        }
+      };
+      mountControlCenter();
+      applyControls();
+      // 面板外点击 / Esc 关闭。
+      const onCcPointer = (event) => {
+        if (ccPanel === null || !ccPanel.hasAttribute('data-open')) return;
+        const t = event.target;
+        if (t instanceof Node && ccPanel.contains(t)) return;
+        if (t instanceof Element && t.closest('[data-kimino-toggle]') !== null) return;
+        closePanel();
+      };
+      const onCcKey = (event) => { if (event.key === 'Escape') closePanel(); };
+      document.addEventListener('mousedown', onCcPointer, true);
+      document.addEventListener('keydown', onCcKey, true);
+      // React 重挂输入卡（切换会话）后补挂按钮与面板、对齐引擎状态。
       const liveToggleObserver = new MutationObserver(() => {
-        injectLiveToggle();
-        const on = liveWanted();
-        if (on !== bgLayer.isConnected) applyLive(on);
+        mountControlCenter();
+        if (wantsLive() !== bgLayer.isConnected) applyLive(wantsLive());
       });
       liveToggleObserver.observe(document.body, { subtree: true, childList: true });
-      reducedMotion.addEventListener?.('change', () => applyLive(liveWanted()));
+      reducedMotion.addEventListener?.('change', () => applyLive(wantsLive()));
       ctx.effect(() => () => {
         liveToggleObserver.disconnect();
         document.removeEventListener('visibilitychange', onVisibility);
-        document.querySelectorAll('[data-kimino-toggle]').forEach((el) => el.remove());
+        document.removeEventListener('mousedown', onCcPointer, true);
+        document.removeEventListener('keydown', onCcKey, true);
+        document.querySelectorAll('[data-kimino-toggle], [data-kimino-panel]').forEach((el) => el.remove());
+        ccPanel = null;
+        const root = document.documentElement;
+        for (const p of ['--kimino-bg-blur', '--kimino-veil', '--kimino-card-blur']) root.style.removeProperty(p);
         applyLive(false);
+      });
+      // ── 自绘「回到底部」按钮 ─────────────────────────────────────────
+      // 视口下沉布局下，组件原生回底按钮依赖的 atBottom 状态锚定在已退化
+      // 为布局的 scrollBody 上而永不出现（保留渐变蒙版的已知代价之一）。
+      // 这里自绘一枚悬浮按钮：直接观测真实滚动器（.Md3f7G_scroll 或下沉的
+      // .wSkVaW_viewArea）的离底距离，点击平滑回底——不依赖组件任何内部状态。
+      const resolveScroller = () => {
+        const root = document.querySelector('.wSkVaW_root[data-phase="active"]');
+        if (root === null) return null;
+        const inner = root.querySelector('.Md3f7G_scroll');
+        if (inner instanceof HTMLElement) return inner;
+        const view = root.querySelector('.wSkVaW_viewArea');
+        return view instanceof HTMLElement ? view : null;
+      };
+      const ccToBottom = document.createElement('button');
+      ccToBottom.type = 'button';
+      ccToBottom.setAttribute('data-kimino-tobottom', '');
+      ccToBottom.setAttribute('aria-label', '回到底部');
+      ccToBottom.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke-width="1.5"><path d="M8 2.5V13.5M3.5 9L8 13.5L12.5 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      let ccScroller = null;
+      let pinUntil = 0;
+      const syncTobottom = () => {
+        const sc = resolveScroller();
+        if (sc === null) {
+          ccScroller = null;
+          ccToBottom.remove();
+          return;
+        }
+        if (sc !== ccScroller) {
+          ccScroller = sc;
+          document.body.append(ccToBottom);
+          // 新会话挂载：自动落底，恢复「进对话停在最新消息」的手感
+          // （下沉布局下原生位置恢复已失效的替代）。挂载后内容仍可能
+          // 渐进渲染，900ms 窗口内持续跟底；用户滚轮/触摸立即让位。
+          pinUntil = Date.now() + 900;
+          sc.scrollTop = sc.scrollHeight;
+        }
+        if (pinUntil > Date.now()) sc.scrollTop = sc.scrollHeight;
+        // 锚定输入卡右缘：按钮贴着会话内容列（居中列），而非窗口边缘。
+        const card = document.querySelector('[data-composer-card]') ?? document.querySelector('[data-composer-seat]');
+        if (card !== null) {
+          const r = card.getBoundingClientRect();
+          ccToBottom.style.right = `${Math.max(8, Math.round(window.innerWidth - r.right + 12))}px`;
+        }
+        const away = sc.scrollHeight - sc.scrollTop - sc.clientHeight > 120;
+        if (away) ccToBottom.setAttribute('data-show', '');
+        else ccToBottom.removeAttribute('data-show');
+      };
+      ccToBottom.addEventListener('click', () => {
+        if (ccScroller !== null) ccScroller.scrollTo({ top: ccScroller.scrollHeight, behavior: 'smooth' });
+      });
+      syncTobottom();
+      document.addEventListener('scroll', syncTobottom, true);
+      window.addEventListener('resize', syncTobottom);
+      const cancelPin = () => { pinUntil = 0; };
+      document.addEventListener('wheel', cancelPin, { passive: true, capture: true });
+      document.addEventListener('touchstart', cancelPin, { passive: true, capture: true });
+      // 内容增长（流式输出）不必然触发 scroll，用 childList 观测兜底。
+      const toBottomObserver = new MutationObserver(syncTobottom);
+      toBottomObserver.observe(document.body, { subtree: true, childList: true });
+      ctx.effect(() => () => {
+        document.removeEventListener('scroll', syncTobottom, true);
+        window.removeEventListener('resize', syncTobottom);
+        document.removeEventListener('wheel', cancelPin, { capture: true });
+        document.removeEventListener('touchstart', cancelPin, { capture: true });
+        toBottomObserver.disconnect();
+        ccToBottom.remove();
       });
       const styleEl = document.createElement('style');
       styleEl.id = 'kimino-theme';
@@ -344,8 +551,17 @@ body::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  backdrop-filter: blur(6px) saturate(140%);
-  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  backdrop-filter: blur(var(--kimino-bg-blur, 1px)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--kimino-bg-blur, 1px)) saturate(140%);
+}
+/* 控制中心「背景加深」遮罩：0 = 全透明（零视觉/零 GPU 差异）。 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(4, 7, 18, var(--kimino-veil, 0));
 }
 [data-chat-flow] {
   background: rgba(13,17,23,0.45);
@@ -465,8 +681,8 @@ body[data-ds-dark-theme] [data-chat-flow] {
 
 [data-composer-card] {
   background: rgba(37, 58, 125, 0.85) !important;
-  backdrop-filter: blur(20px) saturate(130%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
+  backdrop-filter: blur(var(--kimino-card-blur, 0px)) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(var(--kimino-card-blur, 0px)) saturate(130%) !important;
   border: 1px solid rgba(147, 197, 253, 0.45) !important;
   border-radius: 20px !important;
   box-shadow: none !important;
@@ -529,8 +745,8 @@ body[data-ds-dark-theme] [data-chat-flow] {
 }
 [data-composer-seat] > * {
   background: rgba(37, 58, 125, 00.85) !important;
-  backdrop-filter: blur(20px) saturate(130%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
+  backdrop-filter: blur(var(--kimino-card-blur, 0px)) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(var(--kimino-card-blur, 0px)) saturate(130%) !important;
   border: 1px solid rgba(147, 197, 253, 0.5) !important;
   border-radius: 20px !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35) !important;
@@ -999,6 +1215,136 @@ button[data-kimino-toggle][aria-pressed="true"] {
   color: #93C5FD !important;
   box-shadow: inset 0 0 0 1px rgba(147, 197, 253, 0.45) !important;
 }
+
+/* ── kimino 控制中心面板 ─────────────────────────────────────────────
+ * 弹层语言与主题其他浮层一致（slate 0.94 + 彗星蓝描边 + 边缘高光）；
+ * position:fixed 由 JS 按按钮位置定位（body 级，规避卡内 containing block）。 */
+[data-kimino-panel] {
+  position: fixed;
+  z-index: 1200;
+  width: 268px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(147, 197, 253, 0.35);
+  border-radius: 12px;
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 10px 30px rgba(0, 0, 0, 0.4);
+  color: #e2e8f0;
+  font-size: 12px;
+}
+[data-kimino-panel][data-open] { display: flex; }
+.kimino-cc-head {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #93C5FD;
+  padding-bottom: 2px;
+}
+.kimino-cc-row { display: flex; align-items: center; gap: 10px; }
+.kimino-cc-row > span:first-child { flex: none; color: #cbd5e1; }
+.kimino-cc-val {
+  flex: none;
+  min-width: 38px;
+  text-align: right;
+  color: #94A3B8;
+  font-variant-numeric: tabular-nums;
+}
+.kimino-cc-sep {
+  height: 1px;
+  background: rgba(147, 197, 253, 0.18);
+  margin: 2px 0;
+}
+.kimino-cc-toggle {
+  position: relative;
+  margin-left: auto;
+  width: 34px;
+  height: 18px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  padding: 0;
+}
+.kimino-cc-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  transition: left 0.15s ease, background 0.15s ease;
+}
+.kimino-cc-toggle[aria-pressed="true"] { background: rgba(147, 197, 253, 0.5); }
+.kimino-cc-toggle[aria-pressed="true"]::after { left: 18px; background: #ffffff; }
+[data-kimino-panel] input[type="range"] {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  accent-color: #93C5FD;
+  cursor: pointer;
+}
+[data-kimino-panel] input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #93C5FD;
+  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.22);
+}
+[data-kimino-panel] input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 999px;
+  background: #93C5FD;
+}
+.kimino-cc-foot { display: flex; justify-content: flex-end; }
+.kimino-cc-reset {
+  border: 1px solid rgba(147, 197, 253, 0.35);
+  background: rgba(147, 197, 253, 0.12);
+  color: #BFDBFE;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.kimino-cc-reset:hover { background: rgba(147, 197, 253, 0.22); }
+
+/* ── 自绘「回到底部」按钮 ─────────────────────────────────────────────
+ * 视觉沿用 v68 回底圆钮语言（藏蓝玻璃 + 彗星蓝描边 + 边缘高光）；
+ * 底部避让输入席位（--dsh-composer-height）。 */
+[data-kimino-tobottom] {
+  position: fixed;
+  right: 28px;
+  bottom: calc(var(--dsh-composer-height, 160px) + 20px);
+  z-index: 90;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(147, 197, 253, 0.5);
+  background: rgba(37, 58, 125, 0.9);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  color: #DBEAFE;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+[data-kimino-tobottom][data-show] { display: flex; }
+[data-kimino-tobottom]:hover { background: rgba(58, 84, 158, 0.95); }
 `;
       document.head.append(styleEl);
       ctx.effect(() => () => styleEl.remove());

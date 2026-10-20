@@ -62,9 +62,22 @@ It is a standard dsh plugin package: one `dsh plugin` command installs it into a
 
 The theme layers roughly 60 design-token overrides through the official `theme.overrideTokens` API: backgrounds become translucent (revealing the wallpaper), borders turn low-saturation blue, interaction states (hover/active/selected) unify around comet blue, and status colors are tuned for dark glass. Light and dark modes share one visual — glass over a wallpaper does not need a light variant. The full token list lives in [docs/theme-tokens.md](docs/theme-tokens.md) (Chinese).
 
+### Control center
+
+The film icon in the composer toolbar opens the "Kimi no Na wa control center" panel (close via outside click / Esc / clicking the icon again). Every adjustment applies instantly and persists locally:
+
+| Control | Range | Default |
+| --- | --- | --- |
+| Live wallpaper | on / off | **on** (1080p seamless-loop video) |
+| Background blur | 0-20px | **1px** |
+| Background veil | 0-100% | 0% |
+| Input-card blur | 0-20px | **0px** |
+
+"Reset" restores the default visuals. Stability guarantees: the background switches only after the first video frame decodes (load failures fall back to the static image); decoding pauses on hidden tabs; reduced-motion users stay static. A self-drawn back-to-bottom pill (anchored to the conversation column's right edge, appears when >120px from the bottom) pins every session to the latest messages on entry.
+
 ### Wallpaper and logos
 
-- **Two wallpaper variants**: the skin form ships `kimino` (static cinematic still) and `kimino-live` (1080p silent seamless-loop video, 0.6s crossfaded head/tail, only 0.78MB) — clean stillness or drifting light behind the glass, your pick (see the Skin-center route); the plugin form defaults to the static cinematic image (served at `/kimino-bg/current.jpg`) and switches to the live wallpaper via the **film-icon toggle in the composer toolbar** (served at `/kimino-bg/live.mp4`, `assets/live.mp4` inside the package; preference remembered locally, applies instantly). All variants stack a subtle dark gradient for text legibility;
+- **Two wallpaper variants**: the skin form ships `kimino` (static cinematic still) and `kimino-live` (1080p silent seamless-loop video, 0.6s crossfaded head/tail, only 0.78MB) — clean stillness or drifting light behind the glass, your pick (see the Skin-center route); the plugin form **defaults to the live wallpaper** (served at `/kimino-bg/live.mp4`, `assets/live.mp4` inside the package) and switches back to the static image (`/kimino-bg/current.jpg`) from the control center. All variants stack a subtle dark gradient for text legibility;
 - The expanded sidebar shows the horizontal movie logo; the collapsed rail shows a letter mark (two SVGs, also plugin-served);
 - The hero headline is replaced with a large centered logo.
 

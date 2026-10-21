@@ -2,3 +2,13 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# 宣传片工作区（素材与产物不入库）
+promo/assets/
+promo/out/
+promo/public/assets
+promo/.dsh-demo/
+promo/.pw-browsers/
+promo/public/music.wav
+promo/public/narration/
+.pnpm-store/

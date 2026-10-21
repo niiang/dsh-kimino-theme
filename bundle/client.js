@@ -121,6 +121,13 @@ window.__ModuleLoader__.load({
         '--dsw-specific-bubble': pair('rgba(15,23,42,0.75)'),
         '--dsw-specific-tip': pair('rgba(13,17,23,0.75)'),
         '--dsw-specific-menu': pair('rgba(15,23,42,0.94)'),
+        // MenuSurface primitive (background-jobs menu, model picker, trigger
+        // menus …) paints from these two body tokens; the official light value
+        // is a near-white #f8f9fa94 and only flips under data-ds-dark-theme,
+        // which this theme never sets. Override both modes to the kimino
+        // surface so every popup mounts on deep-space glass.
+        '--dsw-menu-surface-fill': pair('rgba(15,23,42,0.94)'),
+        '--dsw-menu-backdrop-filter': pair('blur(40px) saturate(150%)'),
         '--dsw-specific-selector': pair('rgba(255,255,255,0.1)'),
         '--dsw-alias-scrollbar-bg-l1': pair('rgba(15,23,42,0.35)'),
         '--dsw-alias-scrollbar-bg-l2': pair('rgba(147,197,253,0.32)'),
@@ -1168,6 +1175,18 @@ button.hz8-rW_header:focus-visible {
 .nyYjTG_fileIcon {
   background: rgba(147, 197, 253, 0.14) !important;
   border-color: rgba(147, 197, 253, 0.28) !important;
+}
+/* ── Background-jobs menu (QsffPG_, dsh-client-ui-jobs) ── The surface fill
+ * is fixed at the token layer (--dsw-menu-surface-fill override above); what
+ * remains here are the row internals. Official CSS backgrounds
+ * --dsw-alias-fill-l2 for the live-row wash and the kind chip, but that
+ * token is never defined anywhere, so both resolve to transparent — running
+ * rows lose their highlight and the chips sit bare. Give them navy glass. */
+.QsffPG_rowLineLive {
+  background: rgba(37, 58, 125, 0.32) !important;
+}
+.QsffPG_kind {
+  background: rgba(37, 58, 125, 0.42) !important;
 }
 .bhn1Oq_searchInput {
   color: #F8FAFC !important;

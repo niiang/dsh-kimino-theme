@@ -1168,6 +1168,21 @@ button.hz8-rW_header:focus-visible {
   background: rgba(147, 197, 253, 0.14) !important;
   border: 1px solid rgba(147, 197, 253, 0.28) !important;
 }
+/* ── Deliverables presented-file card (nyYjTG_, the file rows under a
+ * message) ── Same leak as hz8-rW: official --deliverable-fill resolves
+ * to neutral-50 (near-white row) and the icon chip mixes neutral-00 50%
+ * (half-white square) in light mode; the theme keeps one dark visual
+ * without flipping body[data-ds-dark-theme]. Normalize both modes. */
+.nyYjTG_file {
+  background: rgba(15, 23, 42, 0.55) !important;
+}
+.nyYjTG_file:hover {
+  background: rgba(15, 23, 42, 0.72) !important;
+}
+.nyYjTG_fileIcon {
+  background: rgba(147, 197, 253, 0.14) !important;
+  border-color: rgba(147, 197, 253, 0.28) !important;
+}
 .bhn1Oq_searchInput {
   color: #F8FAFC !important;
 }
